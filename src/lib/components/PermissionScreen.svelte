@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from 'svelte';
     import { queryMicAccess, startMicrophoneStream } from '$lib/modules/mic';
 
 	let { oncontinue } = $props();
@@ -10,7 +11,7 @@
 
     $effect(() => {
         if ( micAccessGranted )
-            setTimeout(() => oncontinue(), 1500);
+            setTimeout(oncontinue, 1500);
     });
 
     async function updateMicAccessState() {
@@ -29,7 +30,7 @@
 		});
     }
 
-	requestMicrophoneAccess();
+	onMount(requestMicrophoneAccess);
 </script>
 
 <div class="screen permission-screen">
