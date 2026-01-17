@@ -8,17 +8,22 @@ body {
 }
 
 .screen {
-    min-height: 100dvh;
+    min-height: 100vh;
+    margin: 0;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    padding-top: calc(20px + env(safe-area-inset-top));
-    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    padding: 
+        calc(20px + env(safe-area-inset-top)) 
+        20px 
+        calc(20px + env(safe-area-inset-bottom));
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-sizing: border-box;
 }
 
 .container {
+    margin: 0;
     background: white;
     border-radius: 16px;
     padding: 30px;
