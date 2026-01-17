@@ -9,28 +9,25 @@
     let micAccessGranted = $derived(micAccessState === 'granted');
 	let requestingMicAccess = $state(false);
 
-    $effect(() => {
-        if ( micAccessGranted )
-            setTimeout(oncontinue, 1500);
-    });
-
-    async function updateMicAccessState() {
-		micAccessState = await queryMicAccess();
-		return micAccessState;
-    }
-
     function requestMicrophoneAccess() {
-		updateMicAccessState().then((state) => {
-			if ( micAccessState === 'denied' ) return;
+		queryMicAccess().then((state) => {
+			if ( state !== 'granted' )
+				micAccessState = state;
+			if ( state === 'denied' ) 
+				return;
 			requestingMicAccess = true;
 			startMicrophoneStream().then((result) => {
 				requestingMicAccess = false;
-				updateMicAccessState();
+				queryMicAccess().then((state) => {
+					micAccessState = state;
+					if ( state === 'granted' )
+						setTimeout(oncontinue, 1500);
+				});
 			});
 		});
     }
 
-	onMount(requestMicrophoneAccess);
+	onMount(() => requestMicrophoneAccess());
 </script>
 
 <div class="screen permission-screen">
