@@ -13,6 +13,7 @@ var audioContext = null;
  */
 export async function queryMicAccess(callback) {
     const access = await navigator.permissions.query({ name: "microphone" });
+    mic_access = (access.state === "granted");
     callback?.(access.state);
     return access.state;
 }
@@ -55,7 +56,8 @@ export function startPitchDetection(callback)
         fftSize *= 2;
     analyserNode.fftSize = fftSize;
 
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+    .then((stream) => {
         audioContext.createMediaStreamSource(stream).connect(analyserNode);
         const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
         detector.minVolumeDecibels = -20;

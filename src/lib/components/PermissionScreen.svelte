@@ -1,5 +1,5 @@
 <script>
-    import { queryMicAccess, requestMicAccess } from '$lib/modules/mic';
+    import { isMicAccessGranted, queryMicAccess, requestMicAccess } from '$lib/modules/mic';
 	let { oncontinue } = $props();
     let micAccessGranted = $state(false);
 
@@ -9,7 +9,8 @@
     });
 
     function updateMicAccessStatus() {
-        queryMicAccess( (result) => micAccessGranted = (result=="granted") );
+		micAccessGranted = isMicAccessGranted() 
+			|| queryMicAccess( (result) => micAccessGranted = (result=="granted") );
     }
 
     function requestMicrophoneAccess() {
