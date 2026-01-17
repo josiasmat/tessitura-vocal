@@ -4,27 +4,23 @@
 
 	let { oncontinue } = $props();
 
-	/** 'unknown' | 'granted' | 'denied' | 'prompt' */
-	let micAccessState = $state('unknown'); 
+	/** 'unknown' | 'granted' | 'denied' | 'prompt' | 'requesting' */
+	let micAccessState = $state('prompt'); 
     let micAccessGranted = $derived(micAccessState === 'granted');
-	let requestingMicAccess = $state(false);
+	let requestingMicAccess = $derived(micAccessState === 'requesting');
 
     function requestMicrophoneAccess() {
-		queryMicAccess().then((state) => {
-			alert(state);
-			if ( state !== 'granted' )
-				micAccessState = state;
-			if ( state === 'denied' ) 
-				return;
-			requestingMicAccess = true;
-			startMicrophoneStream().then((result) => {
-				requestingMicAccess = false;
-				queryMicAccess().then((state) => {
-					micAccessState = state;
-				});
-				if ( result )
-					setTimeout(() => oncontinue(), 1500);
-			});
+		// Since Firefox mobile always returns 'prompt' for
+		// permission query, we directly try to start the stream
+		// and update the state based on the result.
+		micAccessState = 'requesting';
+		startMicrophoneStream().then((result) => {
+			if ( result ) {
+				micAccessState = 'granted';
+				setTimeout(() => oncontinue(), 1500);
+			} else {
+				micAccessState = 'denied';
+			}
 		});
     }
 
