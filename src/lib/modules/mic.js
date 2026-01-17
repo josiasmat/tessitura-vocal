@@ -1,38 +1,36 @@
 import { PitchDetector } from "pitchy";
 
-/** @type {boolean} */
-var mic_access = false;
 /** @type {number|null} */
 var interval_id = null;
 /** @type {AudioContext|null} */
 var audioContext = null;
+/** @type {MediaStream|null} */
+var micStream = null;
 
 /**
- * @param {function(string):void} callback - Function to call with the permission state
+ * @param {function(string):void} [callback] - Function to call with the permission state
  * @returns {Promise<string>} 'granted', 'denied', or 'prompt'
  */
 export async function queryMicAccess(callback) {
     const access = await navigator.permissions.query({ name: "microphone" });
-    mic_access = (access.state === "granted");
     callback?.(access.state);
     return access.state;
 }
 
-/** @returns {boolean} */
-export function isMicAccessGranted() {
-    return mic_access;
-}
 
-export async function requestMicAccess() {
+/** @returns {Promise<boolean>} */
+export async function startMicrophoneStream() {
+    console.log(Object.prototype.toString.call(micStream));
     try {
-        // This will trigger the browser's microphone permission dialog
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        // Stop the stream for now (we'll use it later in the listening screen)
-        stream.getTracks().forEach((track) => track.stop());
-        return mic_access = true;
+        if (!audioContext)
+            audioContext = new window.AudioContext();
+        if ( !micStream )
+            micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        console.log('Microphone access granted.');
+        return true;
     } catch (error) {
         console.error('Microphone access denied:', error);
-        return mic_access = false;
+        return false;
     }
 }
 
@@ -44,9 +42,6 @@ export async function requestMicAccess() {
 export function startPitchDetection(callback) 
 {
     const MILLISECONDS = 100;
-
-    if (!audioContext)
-        audioContext = new window.AudioContext();
     
     const analyserNode = audioContext.createAnalyser();
 
@@ -56,20 +51,17 @@ export function startPitchDetection(callback)
         fftSize *= 2;
     analyserNode.fftSize = fftSize;
 
-    navigator.mediaDevices.getUserMedia({ audio: true })
-    .then((stream) => {
-        audioContext.createMediaStreamSource(stream).connect(analyserNode);
-        const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
-        detector.minVolumeDecibels = -20;
-        const input = new Float32Array(detector.inputLength);
-        
-        if ( interval_id )
-            clearInterval(interval_id);
-        
-        interval_id = setInterval(() => {
-            callback(updatePitch(analyserNode, detector, input, audioContext.sampleRate));
-        }, MILLISECONDS);
-    });
+    audioContext.createMediaStreamSource(micStream).connect(analyserNode);
+    const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
+    detector.minVolumeDecibels = -20;
+    const input = new Float32Array(detector.inputLength);
+    
+    if ( interval_id )
+        clearInterval(interval_id);
+    
+    interval_id = setInterval(() => {
+        callback(updatePitch(analyserNode, detector, input, audioContext.sampleRate));
+    }, MILLISECONDS);
 }
 
 

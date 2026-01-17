@@ -21,15 +21,25 @@
     );
 
 	function startListening() {
+		let clearCurrentId = null;
         startPitchDetection((result) => {
             const midiPitch = freqToMidi(result.pitch);
             if ( result.clarity >= 0.95 && midiPitch >= 36 && midiPitch < 89) {
+				if ( clearCurrentId ) {
+					clearTimeout(clearCurrentId);
+					clearCurrentId = null;
+				}
                 currentPitch = midiPitch;
                 if ( !lowestPitch || midiPitch < lowestPitch )
                     lowestPitch = midiPitch;
                 if ( !highestPitch || midiPitch > highestPitch )
                     highestPitch = midiPitch;
-            }
+            } else {
+				if ( !clearCurrentId )
+					clearCurrentId = setTimeout(() => {
+						currentPitch = null;
+					}, 500);
+			}
         });
 		isListening = true;
 	}
@@ -40,6 +50,8 @@
 		const range = [lowestPitch, highestPitch];
 		onfinish(range);
 	}
+
+	startListening();
 </script>
 
 <div class="screen listening-screen">

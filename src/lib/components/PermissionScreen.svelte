@@ -1,24 +1,35 @@
 <script>
-    import { isMicAccessGranted, queryMicAccess, requestMicAccess } from '$lib/modules/mic';
+    import { queryMicAccess, startMicrophoneStream } from '$lib/modules/mic';
+
 	let { oncontinue } = $props();
-    let micAccessGranted = $state(false);
+
+	/** 'unknown' | 'granted' | 'denied' | 'prompt' */
+	let micAccessState = $state('unknown'); 
+    let micAccessGranted = $derived(micAccessState === 'granted');
+	let requestingMicAccess = $state(false);
 
     $effect(() => {
         if ( micAccessGranted )
             setTimeout(() => oncontinue(), 1500);
     });
 
-    function updateMicAccessStatus() {
-		micAccessGranted = isMicAccessGranted() 
-			|| queryMicAccess( (result) => micAccessGranted = (result=="granted") );
+    async function updateMicAccessState() {
+		micAccessState = await queryMicAccess();
+		return micAccessState;
     }
 
     function requestMicrophoneAccess() {
-        requestMicAccess()
-        .then(() => updateMicAccessStatus());
+		updateMicAccessState().then((state) => {
+			if ( micAccessState === 'denied' ) return;
+			requestingMicAccess = true;
+			startMicrophoneStream().then((result) => {
+				requestingMicAccess = false;
+				updateMicAccessState();;
+			});
+		});
     }
 
-    updateMicAccessStatus();
+	requestMicrophoneAccess();
 </script>
 
 <div class="screen permission-screen">
@@ -39,14 +50,39 @@
 			</div>
 
 		{:else}
-            <p class="description">
-                Este aplicativo precisa de acesso ao seu microfone para ouvir sua voz 
-                e detectar as notas	que você está cantando.
-            </p>
+			<p class="description">
+				Este aplicativo precisa de acesso ao seu microfone para ouvir sua voz 
+				e detectar as notas	que você está cantando.
+			</p>
 
-			<button class="btn-primary" onclick={requestMicrophoneAccess}>
-				Solicitar acesso ao microfone
-			</button>
+			{#if micAccessState === 'prompt'}
+				{#if requestingMicAccess}
+					<div class="waiting-message">
+						Autorize o acesso do aplicativo ao microfone no pop-up do navegador...
+					</div>
+
+					<div class="indicator active">
+						<div class="pulse"></div>
+						<div class="pulse" style="animation-delay: 0.2s"></div>
+						<div class="pulse" style="animation-delay: 0.4s"></div>
+					</div>
+
+				{:else}
+					<button class="btn-primary" onclick={requestMicrophoneAccess}>
+						Solicitar acesso ao microfone
+					</button>
+				{/if}
+
+			{:else if micAccessState === 'denied'}
+				<p class="error-message">
+					O acesso ao microfone foi negado. Por favor, permita o acesso 
+					ao microfone nas configurações do seu navegador para continuar.
+				</p>
+
+				<button class="btn-primary" onclick={requestMicrophoneAccess}>
+					Tentar novamente
+				</button>
+			{/if}
 
             <div class="permission-info">
                 <p>Seu microfone será usado apenas:</p>
@@ -102,16 +138,6 @@
 
 	.permission-info li {
 		margin: 6px 0;
-	}
-
-	.success-message {
-		background: #d4edda;
-		border: 1px solid #c3e6cb;
-		color: #155724;
-		padding: 12px;
-		border-radius: 8px;
-		margin-bottom: 20px;
-		font-weight: 500;
 	}
 
 	@media (max-width: 480px) {
