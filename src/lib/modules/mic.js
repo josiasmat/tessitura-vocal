@@ -20,7 +20,6 @@ export async function queryMicAccess(callback) {
 
 /** @returns {Promise<boolean>} */
 export async function startMicrophoneStream() {
-    console.log(Object.prototype.toString.call(micStream));
     try {
         if (!audioContext)
             audioContext = new window.AudioContext();
