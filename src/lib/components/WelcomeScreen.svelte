@@ -26,6 +26,11 @@
 		<button class="btn-primary" onclick={onstart}>
 			Iniciar
 		</button>
+
+		<p class="footer">
+			© 2026 Josias Matschulat. 
+			Obtenha o <a href="https://github.com/josiasmat/tessitura-vocal" target="_blank">código fonte</a>.
+		</p>
 	</div>
 </div>
 
@@ -39,6 +44,13 @@
 		font-size: 16px;
 		line-height: 1.6;
 		margin: 0 0 20px 0;
+	}
+
+	p.footer {
+		text-align: center;
+		font-size: 12px;
+		color: #777;
+		margin: 30px 0 0 0;
 	}
 
 	.features {
