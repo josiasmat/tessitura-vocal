@@ -25,7 +25,10 @@
 			requestingMicAccess = true;
 			startMicrophoneStream().then((result) => {
 				requestingMicAccess = false;
-				updateMicAccessState();;
+				if ( result ) 
+					micAccessState = 'granted';
+				else 
+					updateMicAccessState();
 			});
 		});
     }
