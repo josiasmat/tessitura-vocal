@@ -12,7 +12,7 @@ var micStream = null;
  */
 export async function queryMicAccess() {
     const access = await navigator.permissions.query({ name: "microphone" });
-    return access.state;
+    return access?.state ?? 'unknown';
 }
 
 

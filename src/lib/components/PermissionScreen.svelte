@@ -11,6 +11,7 @@
 
     function requestMicrophoneAccess() {
 		queryMicAccess().then((state) => {
+			alert(state);
 			if ( state !== 'granted' )
 				micAccessState = state;
 			if ( state === 'denied' ) 
