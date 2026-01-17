@@ -20,9 +20,9 @@
 				requestingMicAccess = false;
 				queryMicAccess().then((state) => {
 					micAccessState = state;
-					if ( state === 'granted' )
-						setTimeout(oncontinue, 1500);
 				});
+				if ( result )
+					setTimeout(() => oncontinue(), 1500);
 			});
 		});
     }

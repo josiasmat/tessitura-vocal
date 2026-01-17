@@ -8,12 +8,10 @@ var audioContext = null;
 var micStream = null;
 
 /**
- * @param {function(string):void} [callback] - Function to call with the permission state
  * @returns {Promise<string>} 'granted', 'denied', or 'prompt'
  */
-export async function queryMicAccess(callback) {
+export async function queryMicAccess() {
     const access = await navigator.permissions.query({ name: "microphone" });
-    callback?.(access.state);
     return access.state;
 }
 
