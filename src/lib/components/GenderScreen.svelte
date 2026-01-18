@@ -23,22 +23,18 @@
 
 	<div class="options-box">
 		<div class="switch-group">
-			<button
-				class="switch"
-				class:active={selectedGender === 'female'}
-				onclick={() => selectGender('female')}
-			>
-				<span class="icon">👩🏽</span>
-				<span class="label">Voz&nbsp;feminina</span>
-			</button>
-			<button
-				class="switch"
-				class:active={selectedGender === 'male'}
-				onclick={() => selectGender('male')}
-			>
-				<span class="icon">🧑🏽</span>
-				<span class="label">Voz&nbsp;masculina</span>
-			</button>
+			{#each [
+				{ icon: '👩🏽', label: "Voz&nbsp;feminina", value: "female" },
+				{ icon: '🧑🏽', label: "Voz&nbsp;masculina", value: "male" },
+			] as item}
+				<button
+					class={["switch", (selectedGender === item.value) && "active"]}
+					onclick={() => selectGender(item.value)}
+				>
+					<span class="icon">{item.icon}</span>
+					<span class="label">{@html item.label}</span>
+				</button>
+			{/each}
 		</div>
 	</div>
 
@@ -114,10 +110,7 @@
 		cursor: pointer;
 		font-size: 16px;
 		font-weight: 500;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 15px;
+		display: inline-block;
 		color: #666;
 		transition: all 0.3s ease-out;
 	}
@@ -136,12 +129,10 @@
 		animation: normal 0.5s pulse-button;
 	}
 
-	.icon {
+	.switch .icon {
 		font-size: 24px;
-	}
-
-	.label {
-		display: block;
+		vertical-align: -5%;
+		margin-right: 2px;
 	}
 
 	@keyframes pulse-button {
