@@ -1,37 +1,43 @@
 <script>
 	import ScoreView from "./ScoreView.svelte";
     import { midiToNoteName } from "$lib/modules/notes.js";
-	let { range, onreset } = $props();
+	let { range, gender, onreset } = $props();
 
 	const vocalTypes = {
 		'Soprano': {
 			description: 'Voz feminina mais aguda',
 			range: [60, 81],
+			gender: 'female',
 			color: '#FF6B9D'
 		},
 		'Mezzo-Soprano': {
 			description: 'Voz feminina média',
 			range: [57, 77],
+			gender: 'female',
 			color: '#C06C84'
 		},
 		'Contralto': {
 			description: 'Voz feminina mais grave',
 			range: [53, 74],
+			gender: 'female',
 			color: '#6C567B'
 		},
 		'Tenor': {
 			description: 'Voz masculina mais aguda',
 			range: [47, 67],
+			gender: 'male',
 			color: '#4A90E2'
 		},
 		'Barítono': {
 			description: 'Voz masculina média',
 			range: [43, 64],
+			gender: 'male',
 			color: '#2E5C8A'
 		},
 		'Baixo': {
 			description: 'Voz masculina mais grave',
 			range: [40, 60],
+			gender: 'male',
 			color: '#1A3B5C'
 		}
 	};
@@ -43,6 +49,7 @@
         let smallestDiff = Infinity;
 
         for ( const [type, info] of Object.entries(vocalTypes) ) {
+            if (info.gender !== gender) continue;
             let [typeLow, typeHigh] = info.range;
             let lowDiff = Math.abs(detectedLow - typeLow);
             let highDiff = Math.abs(detectedHigh - typeHigh);
