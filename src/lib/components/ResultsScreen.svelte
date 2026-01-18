@@ -78,9 +78,9 @@
 					<ScoreView low={range[0]} high={range[1]} />
 				</td>
 				<td><div class="range-box">
-					<span class="note lowest">{range[0] ? midiToNoteName(range[0]) : '--'}</span>
-					<span class="range-span">▲</span>
 					<span class="note highest">{range[0] ? midiToNoteName(range[1]) : '--'}</span>
+					<span class="range-span">▲</span>
+					<span class="note lowest">{range[0] ? midiToNoteName(range[0]) : '--'}</span>
 				</div></td>
 			</tr></tbody></table>
 
@@ -274,6 +274,11 @@
 
 		.type-name {
 			font-size: 20px;
+		}
+
+		.type-range .range {
+			min-width: 11ch;
+			text-align: right;
 		}
 	}
 </style>
