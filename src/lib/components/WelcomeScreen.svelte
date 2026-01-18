@@ -8,7 +8,7 @@
 	
 	<div class="description">
 		<p>
-			Descubra sua tessitura vocal! Este aplicativo ouvirá sua voz e 
+			Descubra seu tipo de voz! Este aplicativo ouvirá sua voz e 
 			identificará as notas mais graves e mais agudas que você pode cantar.
 		</p>
 		
