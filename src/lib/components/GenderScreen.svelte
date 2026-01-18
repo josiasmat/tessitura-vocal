@@ -47,7 +47,7 @@
 	</button>
 
 	<div class="gender-info">
-		<span class="info-icon">🛈</span>
+		<span class="info-icon">ℹ️</span>
 		<p>Esta escolha serve apenas para ajustar os parâmetros de análise da voz 
 		(faixa de frequência). Ela não se refere à identidade de gênero.</p>
 	</div>
@@ -82,7 +82,8 @@
 	}
 
 	.info-icon {
-		font-size: 18px;
+		font-size: 16px;
+		margin-top: 3px;
 		margin-right: 9px;
 		color: #666;
 	}
