@@ -1,4 +1,6 @@
 <script>
+	import { fly } from 'svelte/transition';
+
 	let { oncontinue } = $props();
 	let selectedGender = $state(null);
 
@@ -12,42 +14,46 @@
 	}
 </script>
 
-<div class="screen gender-screen">
-	<div class="container">
-		<h1>Selecione seu gênero vocal</h1>
-		
-		<div class="description">
-			<p>Isso nos ajudará a identificar corretamente sua tessitura vocal.</p>
-		</div>
+<div class="container" in:fly={{ y: 50, duration: 300, delay: 50 }}>
+	<h2>Selecione&nbsp;seu tipo&nbsp;de&nbsp;voz</h2>
+	
+	<div class="description">
+		<p>Isso nos ajudará a identificar corretamente sua tessitura vocal.</p>
+	</div>
 
-		<div class="options-box">
-			<div class="switch-group">
-				<button
-					class="switch"
-					class:active={selectedGender === 'female'}
-					onclick={() => selectGender('female')}
-				>
-					<span class="icon">👩🏽</span>
-					<span class="label">Voz feminina</span>
-				</button>
-				<button
-					class="switch"
-					class:active={selectedGender === 'male'}
-					onclick={() => selectGender('male')}
-				>
-					<span class="icon">🧑🏽</span>
-					<span class="label">Voz masculina</span>
-				</button>
-			</div>
+	<div class="options-box">
+		<div class="switch-group">
+			<button
+				class="switch"
+				class:active={selectedGender === 'female'}
+				onclick={() => selectGender('female')}
+			>
+				<span class="icon">👩🏽</span>
+				<span class="label">Voz&nbsp;feminina</span>
+			</button>
+			<button
+				class="switch"
+				class:active={selectedGender === 'male'}
+				onclick={() => selectGender('male')}
+			>
+				<span class="icon">🧑🏽</span>
+				<span class="label">Voz&nbsp;masculina</span>
+			</button>
 		</div>
+	</div>
 
-		<button
-			class="btn-primary"
-			onclick={handleContinue}
-			disabled={!selectedGender}
-		>
-			Continuar
-		</button>
+	<button
+		class="btn-primary"
+		onclick={handleContinue}
+		disabled={!selectedGender}
+	>
+		Continuar
+	</button>
+
+	<div class="gender-info">
+		<span class="info-icon">🛈</span>
+		<p>Esta escolha serve apenas para ajustar os parâmetros de análise da voz 
+		(faixa de frequência). Ela não se refere à identidade de gênero.</p>
 	</div>
 </div>
 
@@ -67,7 +73,31 @@
 		border-radius: 12px;
 		padding: 20px;
 		background: #fafafa;
-		margin-bottom: 30px;
+		margin-bottom: 20px;
+	}
+
+	.gender-info {
+		display: flex;
+		flex-direction: row;
+		background: #f0f4ff;
+		border-radius: 8px;
+		padding: 15px;
+		margin: 20px 0 0;
+	}
+
+	.info-icon {
+		font-size: 18px;
+		margin-right: 9px;
+		color: #666;
+	}
+
+	.gender-info p {
+		text-align: left;
+		color: #666;
+		font-weight: 500;
+		font-size: 12px;
+		margin: 0;
+		padding: 0;
 	}
 
 	.switch-group {

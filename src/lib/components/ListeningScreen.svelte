@@ -1,4 +1,6 @@
 <script>
+	import { fly } from "svelte/transition";
+
     import { startPitchDetection, stopPitchDetection } from "$lib/modules/mic.js";
     import { freqToMidi, midiToNoteName } from "$lib/modules/notes.js";
 	import { onMount } from "svelte";
@@ -56,42 +58,41 @@
 	onMount(() => startListening());
 </script>
 
-<div class="screen listening-screen">
-	<div class="container">
-		<div class="header">
-			<h2>Escutando sua voz…</h2>
-			<p class="instructions">
-                Cante até a nota mais grave que você consegue alcançar confortavelmente, e depois 
-                até a nota mais aguda. O aplicativo ouvirá sua voz e determinará sua tessitura vocal.
-            </p>
+<div class="container" in:fly={{ y: 50, duration: 300, delay: 50 }}>
+
+	<div class="header">
+		<h2>Escutando sua voz…</h2>
+		<p class="instructions">
+			Cante até a nota mais grave que você consegue alcançar confortavelmente, e depois 
+			até a nota mais aguda. O aplicativo ouvirá sua voz e determinará sua tessitura vocal.
+		</p>
+	</div>
+
+	<div class="listening-area">
+		<PulseIndicator active={isListening} />
+
+		<div class="current-note">
+			<div class="note-label">Nota atual</div>
+			<div class="note-display">{currentNote}</div>
 		</div>
 
-		<div class="listening-area">
-			<PulseIndicator active={isListening} />
-
-			<div class="current-note">
-				<div class="note-label">Nota atual</div>
-				<div class="note-display">{currentNote}</div>
+		<div class="range-display">
+			<div class="range-item">
+				<span class="range-label">Mais grave</span>
+				<span class="range-value">{lowestNote || '--'}</span>
 			</div>
-
-			<div class="range-display">
-				<div class="range-item">
-					<span class="range-label">Mais grave</span>
-					<span class="range-value">{lowestNote || '--'}</span>
-				</div>
-				<div class="range-separator">▶</div>
-				<div class="range-item">
-					<span class="range-label">Mais aguda</span>
-					<span class="range-value">{highestNote || '--'}</span>
-				</div>
+			<div class="range-separator">▶</div>
+			<div class="range-item">
+				<span class="range-label">Mais aguda</span>
+				<span class="range-value">{highestNote || '--'}</span>
 			</div>
 		</div>
+	</div>
 
-		<div class="controls">
-			<button class="btn-primary" onclick={stopListening} disabled={!canStopListening}>
-				Finalizar
-			</button>
-		</div>
+	<div class="controls">
+		<button class="btn-primary" onclick={stopListening} disabled={!canStopListening}>
+			Finalizar
+		</button>
 	</div>
 </div>
 

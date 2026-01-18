@@ -1,4 +1,6 @@
 <script>
+    import { fly } from "svelte/transition";
+
 	import ScoreView from "./ScoreView.svelte";
     import { midiToNoteName } from "$lib/modules/notes.js";
 	let { range, gender, onreset } = $props();
@@ -73,50 +75,48 @@
 
 </script>
 
-<div class="screen results-screen">
-	<div class="container">
-		<div class="header">
-			<h2>Sua tessitura vocal</h2>
-		</div>
+<div class="container" in:fly={{ y: 50, duration: 300, delay: 300 }}>
+	<div class="header">
+		<h2>Sua tessitura vocal</h2>
+	</div>
 
-		<div class="results">
-			<table class="detected-range"><tbody><tr>
-				<td class="score-container">
-					<ScoreView low={range[0]} high={range[1]} />
-				</td>
-				<td><div class="range-box">
-					<span class="note highest">{range[0] ? midiToNoteName(range[1]) : '--'}</span>
-					<span class="range-span">▲</span>
-					<span class="note lowest">{range[0] ? midiToNoteName(range[0]) : '--'}</span>
-				</div></td>
-			</tr></tbody></table>
+	<div class="results">
+		<table class="detected-range"><tbody><tr>
+			<td class="score-container">
+				<ScoreView low={range[0]} high={range[1]} />
+			</td>
+			<td><div class="range-box">
+				<span class="note highest">{range[0] ? midiToNoteName(range[1]) : '--'}</span>
+				<span class="range-span">▲</span>
+				<span class="note lowest">{range[0] ? midiToNoteName(range[0]) : '--'}</span>
+			</div></td>
+		</tr></tbody></table>
 
-			<div class="vocal-type">
-				<h3>Classificação do tipo vocal</h3>
-				<div class="type-card" style="border-top-color: {selectedType.color}">
-					<div class="type-name">{vocalType}</div>
-					<p class="type-description">{selectedType.description}</p>
-					<div class="type-range">
-						<span class="label">Tessitura padrão:</span>
-						<span class="range">{rangeToNotes(selectedType.range)}</span>
-					</div>
+		<div class="vocal-type">
+			<h3>Classificação do tipo vocal</h3>
+			<div class="type-card" style="border-top-color: {selectedType.color}">
+				<div class="type-name">{vocalType}</div>
+				<p class="type-description">{selectedType.description}</p>
+				<div class="type-range">
+					<span class="label">Tessitura padrão:</span>
+					<span class="range">{rangeToNotes(selectedType.range)}</span>
 				</div>
 			</div>
-
-			<div class="info-box">
-				<h4>Sobre sua tessitura vocal</h4>
-				<p>
-					Sua tessitura vocal detectada foi associada à classificação vocal padrão mais próxima.
-					Lembre-se de que as extensões vocais podem variar e melhorar com prática e treino.
-				</p>
-			</div>
 		</div>
 
-		<div class="actions">
-			<button class="btn-primary" onclick={onreset}>
-				↻ Voltar ao início
-			</button>
+		<div class="info-box">
+			<h4>Sobre sua tessitura vocal</h4>
+			<p>
+				Sua tessitura vocal detectada foi associada à classificação vocal padrão mais próxima.
+				Lembre-se de que as extensões vocais podem variar e melhorar com prática e treino.
+			</p>
 		</div>
+	</div>
+
+	<div class="actions">
+		<button class="btn-primary" onclick={onreset}>
+			↻ Voltar ao início
+		</button>
 	</div>
 </div>
 

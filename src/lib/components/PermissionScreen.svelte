@@ -1,4 +1,6 @@
 <script>
+	import { fly } from 'svelte/transition';
+
 	import { onMount } from 'svelte';
     import { queryMicAccess, startMicrophoneStream } from '$lib/modules/mic';
     import PulseIndicator from './PulseIndicator.svelte';
@@ -28,58 +30,56 @@
 	onMount(() => requestMicrophoneAccess());
 </script>
 
-<div class="screen permission-screen">
-	<div class="container">
-		<div class="big-icon">🎤</div>
-		
-		<h2>Acesso ao microfone</h2>
-		
-		{#if micAccessGranted}
-			<div class="success-message">
-				✓ Acesso ao microfone concedido!
+<div class="container" in:fly={{ y: 50, duration: 300, delay: 50 }}>
+	<div class="big-icon">🎤</div>
+	
+	<h2>Acesso ao microfone</h2>
+	
+	{#if micAccessGranted}
+		<div class="success-message">
+			✓ Acesso ao microfone concedido!
+		</div>
+
+		<PulseIndicator color="#75b784" />
+
+	{:else}
+		<p class="description">
+			Este aplicativo precisa acessar seu microfone para ouvir sua voz 
+			e detectar as notas	que você está cantando.
+		</p>
+
+		{#if micAccessState === 'prompt'}
+			<button class="btn-primary" onclick={requestMicrophoneAccess}>
+				Solicitar acesso ao microfone
+			</button>
+
+		{:else if requestingMicAccess}
+			<div class="waiting-message">
+				Autorize o acesso ao microfone no pop-up do navegador…
 			</div>
 
-			<PulseIndicator color="#75b784" />
+			<PulseIndicator color="#c5a444" />
 
-		{:else}
-			<p class="description">
-				Este aplicativo precisa acessar seu microfone para ouvir sua voz 
-				e detectar as notas	que você está cantando.
+		{:else if micAccessState === 'denied'}
+			<p class="error-message">
+				O acesso ao microfone foi negado. Por favor, permita o acesso 
+				ao microfone nas configurações do seu navegador para continuar.
 			</p>
 
-			{#if micAccessState === 'prompt'}
-				<button class="btn-primary" onclick={requestMicrophoneAccess}>
-					Solicitar acesso ao microfone
-				</button>
-
-			{:else if requestingMicAccess}
-				<div class="waiting-message">
-					Autorize o acesso ao microfone no pop-up do navegador…
-				</div>
-
-				<PulseIndicator color="#c5a444" />
-
-			{:else if micAccessState === 'denied'}
-				<p class="error-message">
-					O acesso ao microfone foi negado. Por favor, permita o acesso 
-					ao microfone nas configurações do seu navegador para continuar.
-				</p>
-
-				<button class="btn-primary" onclick={requestMicrophoneAccess}>
-					Tentar novamente
-				</button>
-			{/if}
-
-            <div class="permission-info">
-                <p>Seu microfone será usado apenas:</p>
-                <ul>
-                    <li>Enquanto este aplicativo estiver em execução</li>
-                    <li>Para análise de voz no seu navegador</li>
-                    <li>Nenhum áudio é gravado ou enviado para qualquer lugar</li>
-                </ul>
-    		</div>
+			<button class="btn-primary" onclick={requestMicrophoneAccess}>
+				Tentar novamente
+			</button>
 		{/if}
-	</div>
+
+		<div class="permission-info">
+			<p>Seu microfone será usado apenas:</p>
+			<ul>
+				<li>Enquanto este aplicativo estiver em execução</li>
+				<li>Para análise de voz no seu navegador</li>
+				<li>Nenhum áudio é gravado ou enviado para qualquer lugar</li>
+			</ul>
+		</div>
+	{/if}
 </div>
 
 <style>

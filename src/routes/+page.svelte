@@ -36,18 +36,20 @@
 	}
 </script>
 
-{#if currentScreen === 'welcome'}
-	<WelcomeScreen onstart={goToGender} />
-{:else if currentScreen === 'gender'}
-	<GenderScreen oncontinue={goToPermission} />
-{:else if currentScreen === 'permission'}
-	<PermissionScreen oncontinue={goToListening} />
-{:else if currentScreen === 'listening'}
-	<ListeningScreen onfinish={goToResults} />
-{:else if currentScreen === 'results'}
-	<ResultsScreen
-		range={detectedRange}
-		gender={voiceGender}
-		onreset={goBackToWelcome}
-	/>
-{/if}
+<div class="screen">
+	{#if currentScreen === 'welcome'}
+		<WelcomeScreen onstart={goToGender} />
+	{:else if currentScreen === 'gender'}
+		<GenderScreen oncontinue={goToPermission} />
+	{:else if currentScreen === 'permission'}
+		<PermissionScreen oncontinue={goToListening} />
+	{:else if currentScreen === 'listening'}
+		<ListeningScreen onfinish={goToResults} />
+	{:else if currentScreen === 'results'}
+		<ResultsScreen
+			range={detectedRange}
+			gender={voiceGender}
+			onreset={goBackToWelcome}
+		/>
+	{/if}
+</div>

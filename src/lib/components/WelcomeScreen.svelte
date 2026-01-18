@@ -1,37 +1,36 @@
 <script>
+	import { fly } from 'svelte/transition';
 	let { onstart } = $props();
 </script>
 
-<div class="screen welcome-screen">
-	<div class="container">
-		<h1>Detector de tessitura vocal</h1>
-		
-		<div class="description">
-			<p>
-                Descubra sua tessitura vocal! Este aplicativo ouvirá sua voz e 
-                identificará as notas mais graves e mais agudas que você pode cantar.
-			</p>
-			
-			<div class="features">
-				<h3>O que este aplicativo faz:</h3>
-				<ul>
-					<li data-bullet="🎤"> Escuta a entrada do seu microfone</li>
-					<li data-bullet="🎵"> Detecta as notas que você está cantando</li>
-					<li data-bullet="📊"> Determina sua tessitura vocal</li>
-					<li data-bullet="😮"> Compara sua tessitura com os tipos vocais padrão</li>
-				</ul>
-			</div>
-		</div>
-
-		<button class="btn-primary" onclick={onstart}>
-			Iniciar
-		</button>
-
-		<p class="footer">
-			© 2026 Josias Matschulat. 
-			Obtenha o <a href="https://github.com/josiasmat/tessitura-vocal" target="_blank">código fonte</a>.
+<div class="container" in:fly={{ y: 50, duration: 300, delay: 300 }}>
+	<h1>Detector de tessitura&nbsp;vocal</h1>
+	
+	<div class="description">
+		<p>
+			Descubra sua tessitura vocal! Este aplicativo ouvirá sua voz e 
+			identificará as notas mais graves e mais agudas que você pode cantar.
 		</p>
+		
+		<div class="features">
+			<h3>O que este aplicativo faz:</h3>
+			<ul>
+				<li data-bullet="🎤"> Escuta a entrada do seu microfone</li>
+				<li data-bullet="🎵"> Detecta as notas que você está cantando</li>
+				<li data-bullet="📊"> Determina sua tessitura vocal</li>
+				<li data-bullet="😮"> Compara sua tessitura com os tipos vocais padrão</li>
+			</ul>
+		</div>
 	</div>
+
+	<button class="btn-primary" onclick={onstart}>
+		Iniciar
+	</button>
+
+	<p class="footer">
+		© 2026 Josias Matschulat. 
+		Obtenha o <a href="https://github.com/josiasmat/tessitura-vocal" target="_blank">código fonte</a>.
+	</p>
 </div>
 
 <style>
