@@ -18,7 +18,7 @@ body {
         calc(20px + env(safe-area-inset-top)) 
         20px 
         calc(20px + env(safe-area-inset-bottom));
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4557a7 0%, #603e83 100%);
     box-sizing: border-box;
 }
 
@@ -103,37 +103,4 @@ h2 {
     background: #fff3cd;
     border: 1px solid #ffeeba;
     color: #856404;
-}
-
-.indicator {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    height: 60px;
-    margin-bottom: 30px;
-}
-
-.indicator.active .pulse {
-    background: #667eea;
-    animation: pulse-animation 1s ease-in-out infinite;
-}
-
-.pulse {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #ddd;
-}
-
-@keyframes pulse-animation {
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.5);
-        opacity: 0.5;
-    }
 }

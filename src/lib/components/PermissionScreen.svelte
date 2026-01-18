@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
     import { queryMicAccess, startMicrophoneStream } from '$lib/modules/mic';
+    import PulseIndicator from './PulseIndicator.svelte';
 
 	let { oncontinue } = $props();
 
@@ -38,35 +39,25 @@
 				✓ Acesso ao microfone concedido!
 			</div>
 
-            <div class="indicator active">
-				<div class="pulse"></div>
-				<div class="pulse" style="animation-delay: 0.2s"></div>
-				<div class="pulse" style="animation-delay: 0.4s"></div>
-			</div>
+			<PulseIndicator color="#75b784" />
 
 		{:else}
 			<p class="description">
-				Este aplicativo precisa de acesso ao seu microfone para ouvir sua voz 
+				Este aplicativo precisa acessar seu microfone para ouvir sua voz 
 				e detectar as notas	que você está cantando.
 			</p>
 
 			{#if micAccessState === 'prompt'}
-				{#if requestingMicAccess}
-					<div class="waiting-message">
-						Autorize o acesso do aplicativo ao microfone no pop-up do navegador...
-					</div>
+				<button class="btn-primary" onclick={requestMicrophoneAccess}>
+					Solicitar acesso ao microfone
+				</button>
 
-					<div class="indicator active">
-						<div class="pulse"></div>
-						<div class="pulse" style="animation-delay: 0.2s"></div>
-						<div class="pulse" style="animation-delay: 0.4s"></div>
-					</div>
+			{:else if requestingMicAccess}
+				<div class="waiting-message">
+					Autorize o acesso ao microfone no pop-up do navegador…
+				</div>
 
-				{:else}
-					<button class="btn-primary" onclick={requestMicrophoneAccess}>
-						Solicitar acesso ao microfone
-					</button>
-				{/if}
+				<PulseIndicator color="#c5a444" />
 
 			{:else if micAccessState === 'denied'}
 				<p class="error-message">
@@ -102,7 +93,7 @@
 	}
 
 	.description {
-		color: #666;
+		color: #555;
 		font-size: 16px;
 		line-height: 1.6;
 		margin-bottom: 25px;
@@ -127,7 +118,7 @@
 	.permission-info ul {
 		margin: 0;
 		padding-left: 20px;
-		color: #666;
+		color: #555;
 		font-size: 14px;
 	}
 

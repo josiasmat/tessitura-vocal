@@ -1,4 +1,5 @@
 <script>
+	import ScoreView from "./ScoreView.svelte";
     import { midiToNoteName } from "$lib/modules/notes.js";
 	let { range, onreset } = $props();
 
@@ -72,14 +73,16 @@
 		</div>
 
 		<div class="results">
-			<div class="detected-range">
-				<h3>Extensão detectada</h3>
-				<div class="range-box">
+			<table class="detected-range"><tbody><tr>
+				<td class="score-container">
+					<ScoreView low={range[0]} high={range[1]} />
+				</td>
+				<td><div class="range-box">
 					<span class="note lowest">{range[0] ? midiToNoteName(range[0]) : '--'}</span>
-					<span class="range-span">até</span>
+					<span class="range-span">▲</span>
 					<span class="note highest">{range[0] ? midiToNoteName(range[1]) : '--'}</span>
-				</div>
-			</div>
+				</div></td>
+			</tr></tbody></table>
 
 			<div class="vocal-type">
 				<h3>Classificação do tipo vocal</h3>
@@ -133,18 +136,27 @@
 
 	.detected-range {
 		background: #f5f5f5;
-		padding: 20px;
+		padding: 0 20px;
 		border-radius: 12px;
+	}
+
+	.score-container {
+		height: 100%;
+		padding-right: 25px;
+		text-align: center;
+		vertical-align: middle;
 	}
 
 	.range-box {
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		gap: 15px;
-		font-size: 36px;
+		gap: 8px;
+		font-size: 24px;
 		font-weight: 700;
 		font-family: 'Monaco', 'Courier New', monospace;
+		vertical-align: middle;
 	}
 
 	.note {
@@ -153,11 +165,13 @@
 		padding: 12px 20px;
 		border-radius: 8px;
 		flex: 0 0 auto;
+		width: 4ch;
+		text-align: center;
 	}
 
 	.range-span {
-		color: #999;
-		font-size: 16px;
+		color: #555;
+		font-size: 22px;
 		font-weight: 400;
 	}
 
@@ -184,7 +198,7 @@
 
 	.type-description {
 		margin: 0 0 15px 0;
-		color: #666;
+		color: #555;
 		font-size: 14px;
 	}
 
@@ -226,7 +240,7 @@
 
 	.info-box p {
 		margin: 0;
-		color: #666;
+		color: #555;
 		font-size: 13px;
 		line-height: 1.6;
 	}
@@ -250,7 +264,12 @@
 		}
 
 		.range-box {
-			font-size: 28px;
+			font-size: 16px;
+			gap: 4px;
+		}
+
+		.range-span {
+			font-size: 16px;
 		}
 
 		.type-name {

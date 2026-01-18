@@ -15,10 +15,10 @@
 			<div class="features">
 				<h3>O que este aplicativo faz:</h3>
 				<ul>
-					<li>🎤 Escuta a entrada do seu microfone</li>
-					<li>🎵 Detecta as notas que você está cantando</li>
-					<li>📊 Determina sua tessitura vocal</li>
-					<li>😮 Compara sua tessitura com os tipos vocais padrão</li>
+					<li data-bullet="🎤"> Escuta a entrada do seu microfone</li>
+					<li data-bullet="🎵"> Detecta as notas que você está cantando</li>
+					<li data-bullet="📊"> Determina sua tessitura vocal</li>
+					<li data-bullet="😮"> Compara sua tessitura com os tipos vocais padrão</li>
 				</ul>
 			</div>
 		</div>
@@ -40,7 +40,7 @@
 	}
 
 	p {
-		color: #666;
+		color: #555;
 		font-size: 16px;
 		line-height: 1.6;
 		margin: 0 0 20px 0;
@@ -71,14 +71,17 @@
 
 	.features ul {
 		margin: 0;
-		padding-left: 20px;
-		list-style: none;
+		padding-left: 40px;
 	}
 
 	.features li {
 		margin: 8px 0;
 		color: #666;
 		font-size: 14px;
+	}
+
+	.features li::marker {
+		content: attr(data-bullet) " ";
 	}
 
 	@media (max-width: 480px) {
@@ -92,6 +95,10 @@
 
 		.features h3 {
 			font-size: 12px;
+		}
+
+		.features ul {
+			padding-left: 20px;
 		}
 
 		.features li {

@@ -1,7 +1,9 @@
 <script>
     import { startPitchDetection, stopPitchDetection } from "$lib/modules/mic.js";
     import { freqToMidi, midiToNoteName } from "$lib/modules/notes.js";
-
+	import { onMount } from "svelte";
+    import PulseIndicator from "./PulseIndicator.svelte";
+	
 	let { onfinish } = $props();
 
 	let isListening = $state(false);
@@ -51,25 +53,21 @@
 		onfinish(range);
 	}
 
-	startListening();
+	onMount(() => startListening());
 </script>
 
 <div class="screen listening-screen">
 	<div class="container">
 		<div class="header">
-			<h2>Detectar sua tessitura vocal</h2>
-			<p class="subtitle">
+			<h2>Escutando sua voz…</h2>
+			<p class="instructions">
                 Cante até a nota mais grave que você consegue alcançar confortavelmente, e depois 
                 até a nota mais aguda. O aplicativo ouvirá sua voz e determinará sua tessitura vocal.
             </p>
 		</div>
 
 		<div class="listening-area">
-			<div class="indicator" class:active={isListening}>
-				<div class="pulse"></div>
-				<div class="pulse" style="animation-delay: 0.2s"></div>
-				<div class="pulse" style="animation-delay: 0.4s"></div>
-			</div>
+			<PulseIndicator active={isListening} />
 
 			<div class="current-note">
 				<div class="note-label">Nota atual</div>
@@ -81,7 +79,7 @@
 					<span class="range-label">Mais grave</span>
 					<span class="range-value">{lowestNote || '--'}</span>
 				</div>
-				<div class="range-separator">→</div>
+				<div class="range-separator">▶</div>
 				<div class="range-item">
 					<span class="range-label">Mais aguda</span>
 					<span class="range-value">{highestNote || '--'}</span>
@@ -90,26 +88,9 @@
 		</div>
 
 		<div class="controls">
-			{#if !isListening}
-				<button class="btn-primary" onclick={startListening}>
-					Iniciar escuta
-				</button>
-			{:else}
-				<button class="btn-primary" onclick={stopListening} disabled={!canStopListening}>
-					Finalizar
-				</button>
-			{/if}
-		</div>
-
-		<div class="instructions">
-			<p>
-				{#if isListening}
-					Continue cantando para expandir sua tessitura detectada. Tente cantar da sua 
-                    nota mais grave até a mais aguda confortavelmente.
-				{:else}
-					Pressione "Iniciar escuta" e cante várias notas para detectar sua tessitura vocal.
-				{/if}
-			</p>
+			<button class="btn-primary" onclick={stopListening} disabled={!canStopListening}>
+				Finalizar
+			</button>
 		</div>
 	</div>
 </div>
@@ -120,22 +101,22 @@
 		margin: 0 0 10px 0;
 	}
 
-	.subtitle {
+	.instructions {
 		margin: 0;
-		color: #666;
-		font-size: 14px;
+		color: #555;
+		font-size: 16px;
 	}
-
+	
 	.listening-area {
 		background: #f5f5f5;
 		border-radius: 12px;
-		padding: 40px 20px;
+		padding: 25px 20px;
 		margin-bottom: 30px;
 		text-align: center;
 	}
 
 	.current-note {
-		margin-bottom: 20px;
+		margin-bottom: 15px;
 	}
 
 	.note-label {
@@ -183,25 +164,11 @@
 
 	.range-separator {
 		font-size: 20px;
-		color: #ccc;
+		color: #999;
 	}
 
 	.controls {
 		margin-bottom: 20px;
-	}
-
-	.instructions {
-		background: #f9f9f9;
-		border-left: 4px solid #667eea;
-		padding: 12px;
-		border-radius: 4px;
-	}
-
-	.instructions p {
-		margin: 0;
-		font-size: 13px;
-		color: #666;
-		line-height: 1.5;
 	}
 
 	@media (max-width: 480px) {
@@ -213,12 +180,16 @@
 			font-size: 20px;
 		}
 
+		.instructions {
+			font-size: 14px;
+		}
+
 		.listening-area {
-			padding: 30px 15px;
+			padding: 25px 15px;
 		}
 
 		.note-display {
-			font-size: 40px;
+			font-size: 36px;
 		}
 
 		.range-value {
