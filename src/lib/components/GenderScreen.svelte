@@ -24,19 +24,19 @@
 			<div class="switch-group">
 				<button
 					class="switch"
-					class:active={selectedGender === 'male'}
-					onclick={() => selectGender('male')}
-				>
-					<span class="icon">🧑🏽</span>
-					<span class="label">Voz masculina</span>
-				</button>
-				<button
-					class="switch"
 					class:active={selectedGender === 'female'}
 					onclick={() => selectGender('female')}
 				>
 					<span class="icon">👩🏽</span>
 					<span class="label">Voz feminina</span>
+				</button>
+				<button
+					class="switch"
+					class:active={selectedGender === 'male'}
+					onclick={() => selectGender('male')}
+				>
+					<span class="icon">🧑🏽</span>
+					<span class="label">Voz masculina</span>
 				</button>
 			</div>
 		</div>
