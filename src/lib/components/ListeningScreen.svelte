@@ -6,7 +6,7 @@
 	import { onMount } from "svelte";
     import PulseIndicator from "./PulseIndicator.svelte";
 	
-	let { onfinish } = $props();
+	let { gender, onfinish } = $props();
 
 	let isListening = $state(false);
 
@@ -27,12 +27,17 @@
 	function startListening() {
 		let clearCurrentId = null;
         startPitchDetection((result) => {
-            const midiPitch = freqToMidi(result.pitch);
+            let midiPitch = freqToMidi(result.pitch);
             if ( result.clarity >= 0.95 && midiPitch >= 36 && midiPitch < 89) {
 				if ( clearCurrentId ) {
 					clearTimeout(clearCurrentId);
 					clearCurrentId = null;
 				}
+				// Limit pitch range based on selected gender
+				if ( gender === "male" && midiPitch > 74 ) 
+					midiPitch = 74;
+				if ( gender === "female" && midiPitch < 48 )
+					midiPitch = 48;
                 currentPitch = midiPitch;
                 if ( !lowestPitch || midiPitch < lowestPitch )
                     lowestPitch = midiPitch;
@@ -63,8 +68,9 @@
 	<div class="header">
 		<h2>Escutando sua voz…</h2>
 		<p class="instructions">
-			Cante até a nota mais grave que você consegue alcançar confortavelmente, e depois 
-			até a nota mais aguda. O aplicativo ouvirá sua voz e determinará sua tessitura vocal.
+			Cante gradualmente até a nota mais grave que você consegue alcançar 
+			confortavelmente, e depois até a nota mais aguda, sem usar falsete.
+			Ao terminar, toque em "Finalizar".
 		</p>
 	</div>
 

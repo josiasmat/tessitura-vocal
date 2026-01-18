@@ -44,7 +44,10 @@
 	{:else if currentScreen === 'permission'}
 		<PermissionScreen oncontinue={goToListening} />
 	{:else if currentScreen === 'listening'}
-		<ListeningScreen onfinish={goToResults} />
+		<ListeningScreen 
+			gender={voiceGender}
+			onfinish={goToResults} 
+		/>
 	{:else if currentScreen === 'results'}
 		<ResultsScreen
 			range={detectedRange}
