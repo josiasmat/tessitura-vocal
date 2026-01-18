@@ -2,7 +2,11 @@
 
 Um pequeno aplicativo web para detectar a tessitura vocal utilizando o microfone.
 
-## Info
+## Uso online
+
+Acesse: https://josiasmat.github.io/tessitura-vocal/
+
+## Informações
 
 © 2026 Josias Matschulat
 
@@ -12,5 +16,6 @@ Licenciado sob os termos da [Licença Pública Geral GNU Affero](https://www.gnu
 
 ## Bibliotecas utilizadas
 
-- [Svelte & SvelteKit](https://svelte.dev/)
+- [Svelte](https://svelte.dev/)
 - [Pitchy](https://github.com/ianprime0509/pitchy)
+- [VexFlow](https://www.vexflow.com/)
