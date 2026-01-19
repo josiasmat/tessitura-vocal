@@ -1,9 +1,13 @@
 <script>
+	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
+
 	import Header from '$lib/components/Header.svelte';
 	import InfoBox from '$lib/components/InfoBox.svelte';
 	
 	let { onstart } = $props();
+
+	onMount(() => window.scrollTo(0, 0));
 </script>
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 300 }}>

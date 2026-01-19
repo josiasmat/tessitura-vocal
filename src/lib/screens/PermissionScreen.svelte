@@ -1,6 +1,6 @@
 <script>
-	import { fly } from 'svelte/transition';
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 	
 	import Header from '$lib/components/Header.svelte';
 	import InfoBox from '$lib/components/InfoBox.svelte';
@@ -30,7 +30,10 @@
 		});
     }
 
-	onMount(() => requestMicrophoneAccess());
+	onMount(() => {
+		window.scrollTo(0, 0);
+		requestMicrophoneAccess();
+	});
 </script>
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 50 }}>

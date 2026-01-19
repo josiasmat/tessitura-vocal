@@ -1,6 +1,6 @@
 <script>
-	import { fly } from "svelte/transition";
 	import { onMount } from "svelte";
+	import { fly } from "svelte/transition";
 
 	import Header from "$lib/components/Header.svelte";
     import PulseIndicator from "$lib/components/PulseIndicator.svelte";
@@ -47,7 +47,10 @@
 		onfinish(range);
 	}
 
-	onMount(() => startListening());
+	onMount(() => {
+		window.scrollTo(0, 0);
+		startListening();
+	});
 </script>
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 50 }}>
