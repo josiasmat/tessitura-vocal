@@ -16,6 +16,11 @@
     let lowestPitch = $state(null);
     let highestPitch = $state(null);
 
+	let pitchOutsideRange = $derived(
+		(currentPitch !== null) && 
+		(currentPitch < RangeDetector.min_pitch || currentPitch > RangeDetector.max_pitch)
+	);
+
 	let currentNote = $derived(currentPitch ? midiToNoteName(currentPitch) : '--');
 	let lowestNote = $derived(lowestPitch ? midiToNoteName(lowestPitch) : null);
 	let highestNote = $derived(highestPitch ? midiToNoteName(highestPitch) : null);
@@ -66,7 +71,7 @@
 
 		<div class="current-note">
 			<div class="note-label">Nota atual</div>
-			<div class="note-display">{currentNote}</div>
+			<div class={["note-display", pitchOutsideRange && "note-off-range"]}>{currentNote}</div>
 		</div>
 
 		<div class="range-display">
@@ -124,6 +129,10 @@
 		font-weight: 700;
 		color: #667eea;
 		font-family: 'Monaco', 'Courier New', monospace;
+	}
+
+	.note-off-range {
+		color: #c53131;
 	}
 
 	.range-display {

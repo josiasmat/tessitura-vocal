@@ -21,16 +21,21 @@ export const RangeDetector = {
     start() 
     {
         clearCurrentPitchTimeout.clear();
+        let previousPitch = null;
 
         startPitchDetection((result) => {
             const pitch = freqToMidi(result.freq);
             if ( result.clarity >= CLARITY_TRESHOLD 
                     && pitch >= MIN_PITCH && pitch <= MAX_PITCH) {
-
-				clearCurrentPitchTimeout.clear();
-                this.currentPitch = pitch;;
-                this.lowPitch = pitch;
-                this.highPitch = pitch;
+                
+                // Stable pitch detected
+                if ( pitch === previousPitch ) {
+                    clearCurrentPitchTimeout.clear();
+                    this.currentPitch = pitch;;
+                    this.lowPitch = pitch;
+                    this.highPitch = pitch;
+                }
+                previousPitch = pitch;
 
             } else {
 				clearCurrentPitchTimeout.set();
