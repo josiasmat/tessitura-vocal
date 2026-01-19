@@ -29,7 +29,7 @@
     .info-content :global(*) {
 		text-align: left;
 		color: #666;
-		font-weight: 500;
+		font-weight: normal;
 		font-size: 12px;
 		margin: 0;
 		padding: 0;
