@@ -1,5 +1,4 @@
 <script>
-	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 
 	import Header from '$lib/components/Header.svelte';
@@ -16,8 +15,6 @@
 		if (selectedGender)
 			oncontinue(selectedGender);
 	}
-
-	onMount(() => window.scrollTo(0, 0));
 </script>
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 50 }}>

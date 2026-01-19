@@ -30,10 +30,7 @@
 		});
     }
 
-	onMount(() => {
-		window.scrollTo(0, 0);
-		requestMicrophoneAccess();
-	});
+	onMount(() => requestMicrophoneAccess());
 </script>
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 50 }}>

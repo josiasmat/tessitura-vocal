@@ -1,5 +1,4 @@
 <script>
-	import { onMount } from "svelte";
     import { fly } from "svelte/transition";
 
 	import Header from "$lib/components/Header.svelte";
@@ -77,8 +76,6 @@
 
     let vocalType = $derived(getVoiceType(range));
     let selectedType = $derived(vocalTypes[vocalType]);
-
-	onMount(() => window.scrollTo(0, 0));
 </script>
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 300 }}>

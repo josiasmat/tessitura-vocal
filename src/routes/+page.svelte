@@ -10,29 +10,37 @@
 	let detectedRange = { lowest: null, highest: null };
 	let matchedVocalType = null;
 
+	// Workaround for a bug in Chrome mobile where scroll 
+	// position is not reset on navigation and a part of
+	// the new screen may appear blank.
+	function setCurrentScreen(id) {
+		currentScreen = id;
+		setTimeout(() => scrollTo(0, 0), 50);
+	}
+
 	function goToGender() {
-		currentScreen = 'gender';
+		voiceGender = null;
+		detectedRange = { lowest: null, highest: null };
+		matchedVocalType = null;
+		setCurrentScreen("gender");
 	}
 
 	function goToPermission(gender) {
 		voiceGender = gender;
-		currentScreen = 'permission';
+		setCurrentScreen("permission");
 	}
 
 	function goToListening() {
-		currentScreen = 'listening';
+		setCurrentScreen("listening");
 	}
 
 	function goToResults(range) {
 		detectedRange = range;
-		currentScreen = 'results';
+		setCurrentScreen("results");
 	}
 
 	function goBackToWelcome() {
-		currentScreen = 'welcome';
-		voiceGender = null;
-		detectedRange = { lowest: null, highest: null };
-		matchedVocalType = null;
+		setCurrentScreen("welcome");
 	}
 
 </script>
