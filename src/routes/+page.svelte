@@ -64,3 +64,39 @@
 		/>
 	{/if}
 </div>
+
+
+<style>
+
+	#app-background {
+		height: 100vh;
+		width: 100vw;
+		box-sizing: border-box;
+		overflow: hidden;
+		position: fixed;
+		background: linear-gradient(135deg, #4557a7 10%, #603e83 90%);
+		background-attachment: fixed;
+		background-position: center;
+		background-size: cover;
+		border: none;
+		margin: 0;
+		z-index: -1;
+	}
+
+	#screen {
+		position: absolute;
+		min-height: 100%;
+		width: 100%;
+		box-sizing: border-box;
+		margin: 0;
+		border: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 
+			calc(20px + env(safe-area-inset-top)) 
+			20px 
+			calc(20px + env(safe-area-inset-bottom));
+	}
+
+</style>
