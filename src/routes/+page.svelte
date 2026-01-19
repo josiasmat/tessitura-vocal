@@ -10,12 +10,9 @@
 	let detectedRange = { lowest: null, highest: null };
 	let matchedVocalType = null;
 
-	// Workaround for a bug in Chrome mobile where scroll 
-	// position is not reset on navigation and a part of
-	// the new screen may appear blank.
 	function setCurrentScreen(id) {
 		currentScreen = id;
-		setTimeout(() => scrollTo(0, 0), 50);
+		scrollTo(0, 0);
 	}
 
 	function goToGender() {
@@ -44,6 +41,8 @@
 	}
 
 </script>
+
+<div id="app-background"></div>
 
 <div id="screen">
 	{#if currentScreen === 'welcome'}
