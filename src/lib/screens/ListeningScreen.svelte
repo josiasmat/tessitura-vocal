@@ -69,15 +69,21 @@
 		</div>
 
 		<div class="range-display">
-			<div class="range-item">
+			<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+			<div class="range-item" onclick={() => RangeDetector.resetLowPitch()}>
 				<span class="range-label">Mais grave</span>
 				<span class="range-value">{lowestNote || '--'}</span>
 			</div>
 			<div class="range-separator">▶</div>
-			<div class="range-item">
+			<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+			<div class="range-item" onclick={() => RangeDetector.resetHighPitch()}>
 				<span class="range-label">Mais aguda</span>
 				<span class="range-value">{highestNote || '--'}</span>
 			</div>
+		</div>
+
+		<div class="range-reset-hint">
+			Se precisar, toque na nota detectada para anular.
 		</div>
 	</div>
 
@@ -131,7 +137,7 @@
 		justify-content: space-around;
 		align-items: center;
 		margin-top: 30px;
-		padding-top: 20px;
+		padding-top: 15px;
 		border-top: 1px solid #e0e0e0;
 	}
 
@@ -139,6 +145,9 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		padding: 5px;
+		cursor: pointer;
+		user-select: none;
 	}
 
 	.range-label {
@@ -158,6 +167,14 @@
 	.range-separator {
 		font-size: 20px;
 		color: #999;
+		padding: none;
+	}
+
+	.range-reset-hint {
+		margin-top: 20px;
+		font-size: 10px;
+		color: #999;
+		text-wrap: balance;
 	}
 
 	.controls {
