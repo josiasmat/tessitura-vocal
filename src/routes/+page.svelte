@@ -12,20 +12,24 @@
 
 	function goToGender() {
 		currentScreen = 'gender';
+		scrollToTop();
 	}
 
 	function goToPermission(gender) {
 		voiceGender = gender;
 		currentScreen = 'permission';
+		scrollToTop();
 	}
 
 	function goToListening() {
 		currentScreen = 'listening';
+		scrollToTop();
 	}
 
 	function goToResults(range) {
 		detectedRange = range;
 		currentScreen = 'results';
+		scrollToTop();
 	}
 
 	function goBackToWelcome() {
@@ -33,7 +37,13 @@
 		voiceGender = null;
 		detectedRange = { lowest: null, highest: null };
 		matchedVocalType = null;
+		scrollToTop();
 	}
+
+	function scrollToTop() {
+		window.scrollTo(0, 0);
+	}
+
 </script>
 
 <div class="screen">
