@@ -41,12 +41,12 @@
 	}
 
 	function scrollToTop() {
-		window.scrollTo(0, 0);
+		document.getElementById("screen").scrollTo(0, 0);
 	}
 
 </script>
 
-<div class="screen">
+<div id="screen">
 	{#if currentScreen === 'welcome'}
 		<WelcomeScreen onstart={goToGender} />
 	{:else if currentScreen === 'gender'}
