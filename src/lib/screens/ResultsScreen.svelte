@@ -1,7 +1,9 @@
 <script>
     import { fly } from "svelte/transition";
 
+	import Header from "$lib/components/Header.svelte";
 	import ScoreView from "$lib/components/ScoreView.svelte";
+	import InfoBox from "$lib/components/InfoBox.svelte";
 
     import { midiToNoteName } from "$lib/modules/notes.js";
 
@@ -78,9 +80,9 @@
 </script>
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 300 }}>
-	<div class="header">
+	<Header>
 		<h2>Sua tessitura vocal</h2>
-	</div>
+	</Header>
 
 	<div class="results">
 		<table class="detected-range"><tbody><tr>
@@ -106,21 +108,16 @@
 			</div>
 		</div>
 
-		<div class="info-box">
-			<h4>Aviso</h4>
-			<p>
-				Sua tessitura vocal detectada foi associada à classificação vocal padrão mais próxima.
-				Para uma avaliação mais precisa, consulte um professor de canto ou regente coral.
-				Lembre-se também de que a extensão vocal pode variar e melhorar com prática e treino.
-			</p>
-		</div>
+		<InfoBox>
+			<p>Sua tessitura vocal detectada foi associada à classificação vocal padrão mais próxima.
+			Para uma avaliação mais precisa, consulte um professor de canto ou regente coral.
+			Lembre-se também de que a extensão vocal pode variar e melhorar com prática e treino.</p>
+		</InfoBox>
 	</div>
 
-	<div class="actions">
-		<button class="btn-primary" onclick={onreset}>
-			↻ Voltar ao início
-		</button>
-	</div>
+	<button class="btn-primary" onclick={onreset}>
+		↻ Voltar ao início
+	</button>
 </div>
 
 <style>
@@ -231,33 +228,6 @@
 		color: #333;
 		font-weight: 600;
 		font-family: 'Monaco', 'Courier New', monospace;
-	}
-
-	.info-box {
-		background: #f0f4ff;
-		border-left: 4px solid #667eea;
-		padding: 15px;
-		border-radius: 8px;
-	}
-
-	.info-box h4 {
-		margin: 0 0 10px 0;
-		font-size: 14px;
-		color: #333;
-		text-transform: uppercase;
-		font-weight: 600;
-	}
-
-	.info-box p {
-		margin: 0;
-		color: #555;
-		font-size: 13px;
-		line-height: 1.6;
-	}
-
-	.actions {
-		display: flex;
-		gap: 10px;
 	}
 
 	@media (max-width: 480px) {

@@ -1,6 +1,9 @@
 <script>
 	import { fly } from 'svelte/transition';
 
+	import Header from '$lib/components/Header.svelte';
+	import InfoBox from '$lib/components/InfoBox.svelte';
+
 	let { oncontinue } = $props();
 	let selectedGender = $state(null);
 
@@ -15,11 +18,12 @@
 </script>
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 50 }}>
-	<h2>Selecione&nbsp;seu tipo&nbsp;de&nbsp;voz</h2>
-	
-	<div class="description">
-		<p>Isso nos ajudará a identificar corretamente sua tessitura vocal.</p>
-	</div>
+	<Header>
+		<h2>Selecione&nbsp;seu tipo&nbsp;de&nbsp;voz</h2>
+		<div class="description">
+			<p>Isso nos ajudará a identificar corretamente sua tessitura vocal.</p>
+		</div>
+	</Header>
 
 	<div class="options-box">
 		<div class="switch-group">
@@ -38,19 +42,14 @@
 		</div>
 	</div>
 
-	<button
-		class="btn-primary"
-		onclick={handleContinue}
-		disabled={!selectedGender}
-	>
+	<button class="btn-primary" onclick={handleContinue} disabled={!selectedGender}>
 		Continuar
 	</button>
 
-	<div class="gender-info">
-		<span class="info-icon">ℹ️</span>
-		<p>Esta escolha serve apenas para ajustar os parâmetros de análise da voz 
+	<InfoBox>
+		<p>Esta escolha serve apenas para ajustar os parâmetros de análise da voz
 		(faixa de frequência). Ela não se refere à identidade de gênero.</p>
-	</div>
+	</InfoBox>
 </div>
 
 <style>
@@ -70,31 +69,6 @@
 		padding: 20px;
 		background: #fafafa;
 		margin-bottom: 20px;
-	}
-
-	.gender-info {
-		display: flex;
-		flex-direction: row;
-		background: #f0f4ff;
-		border-radius: 8px;
-		padding: 15px;
-		margin: 20px 0 0;
-	}
-
-	.info-icon {
-		font-size: 16px;
-		margin-top: 3px;
-		margin-right: 9px;
-		color: #666;
-	}
-
-	.gender-info p {
-		text-align: left;
-		color: #666;
-		font-weight: 500;
-		font-size: 12px;
-		margin: 0;
-		padding: 0;
 	}
 
 	.switch-group {
@@ -134,6 +108,10 @@
 		font-size: 24px;
 		vertical-align: -5%;
 		margin-right: 2px;
+	}
+
+	.btn-primary {
+		margin-bottom: 20px;
 	}
 
 	@keyframes pulse-button {

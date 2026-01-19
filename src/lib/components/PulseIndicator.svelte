@@ -18,7 +18,7 @@
         align-items: center;
         gap: 10px;
         height: 60px;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
     }
 
     .indicator.active .pulse {

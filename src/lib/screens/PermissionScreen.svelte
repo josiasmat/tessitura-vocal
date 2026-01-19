@@ -2,6 +2,8 @@
 	import { fly } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	
+	import Header from '$lib/components/Header.svelte';
+	import InfoBox from '$lib/components/InfoBox.svelte';
     import PulseIndicator from '$lib/components/PulseIndicator.svelte';
 
     import { queryMicAccess, startMicrophoneStream } from '$lib/modules/mic';
@@ -32,9 +34,17 @@
 </script>
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 50 }}>
-	<div class="big-icon">🎤</div>
-	
-	<h2>Acesso ao microfone</h2>
+	<Header>
+		<div class="big-icon">🎤</div>
+		<h2>Acesso ao microfone</h2>
+
+		{#if !micAccessGranted}
+			<p class="description">
+				Este aplicativo precisa acessar seu microfone para ouvir sua voz 
+				e detectar as notas	que você está cantando.
+			</p>
+		{/if}
+	</Header>
 	
 	{#if micAccessGranted}
 		<div class="success-message">
@@ -44,10 +54,6 @@
 		<PulseIndicator color="#75b784" />
 
 	{:else}
-		<p class="description">
-			Este aplicativo precisa acessar seu microfone para ouvir sua voz 
-			e detectar as notas	que você está cantando.
-		</p>
 
 		{#if micAccessState === 'prompt'}
 			<button class="btn-primary" onclick={requestMicrophoneAccess}>
@@ -72,14 +78,14 @@
 			</button>
 		{/if}
 
-		<div class="permission-info">
+		<InfoBox>
 			<p>Seu microfone será usado apenas:</p>
 			<ul>
 				<li>Enquanto este aplicativo estiver em execução</li>
 				<li>Para análise de voz no seu navegador</li>
 				<li>Nenhum áudio é gravado ou enviado para qualquer lugar</li>
 			</ul>
-		</div>
+		</InfoBox>
 	{/if}
 </div>
 
@@ -90,7 +96,7 @@
 
 	.big-icon {
 		font-size: 56px;
-		margin-bottom: 20px;
+		margin-bottom: 15px;
 	}
 
 	.description {
@@ -100,31 +106,8 @@
 		margin-bottom: 25px;
 	}
 
-	.permission-info {
-		background: #f0f4ff;
-		border: 1px solid #e0e7ff;
-		border-radius: 8px;
-		padding: 15px;
-		margin: 25px 0;
-		text-align: left;
-	}
-
-	.permission-info p {
-		margin: 0 0 10px 0;
-		color: #333;
-		font-weight: 500;
-		font-size: 14px;
-	}
-
-	.permission-info ul {
-		margin: 0;
-		padding-left: 20px;
-		color: #555;
-		font-size: 14px;
-	}
-
-	.permission-info li {
-		margin: 6px 0;
+	.btn-primary {
+		margin-bottom: 20px;
 	}
 
 	@media (max-width: 480px) {

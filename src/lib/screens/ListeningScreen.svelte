@@ -2,6 +2,7 @@
 	import { fly } from "svelte/transition";
 	import { onMount } from "svelte";
 
+	import Header from "$lib/components/Header.svelte";
     import PulseIndicator from "$lib/components/PulseIndicator.svelte";
 
 	import { RangeDetector } from "$lib/modules/range-detector";
@@ -51,14 +52,14 @@
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 50 }}>
 
-	<div class="header">
+	<Header>
 		<h2>Escutando sua voz…</h2>
 		<p class="instructions">
 			Cante gradualmente até a nota mais grave que você consegue alcançar 
 			confortavelmente, e depois até a nota mais aguda, sem usar falsete.
 			Ao terminar, toque em "Finalizar".
 		</p>
-	</div>
+	</Header>
 
 	<div class="listening-area">
 		<PulseIndicator active={isListening} />
@@ -87,21 +88,14 @@
 		</div>
 	</div>
 
-	<div class="controls">
-		<button class="btn-primary" onclick={stopListening} disabled={!canStopListening}>
-			Finalizar
-		</button>
-	</div>
+	<button class="btn-primary" onclick={stopListening} disabled={!canStopListening}>
+		Finalizar
+	</button>
 </div>
 
 <style>
 
-	h2 {
-		margin: 0 0 10px 0;
-	}
-
 	.instructions {
-		margin: 0;
 		color: #555;
 		font-size: 16px;
 	}
@@ -175,10 +169,6 @@
 		font-size: 10px;
 		color: #999;
 		text-wrap: balance;
-	}
-
-	.controls {
-		margin-bottom: 20px;
 	}
 
 	@media (max-width: 480px) {

@@ -1,62 +1,59 @@
 <script>
 	import { fly } from 'svelte/transition';
+	import Header from '$lib/components/Header.svelte';
+	import InfoBox from '$lib/components/InfoBox.svelte';
 	
 	let { onstart } = $props();
 </script>
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 300 }}>
-	<h1>Detector de tessitura&nbsp;vocal</h1>
-	
-	<div class="description">
-		<p>
+
+	<Header>
+		<h1>Detector de tessitura&nbsp;vocal</h1>
+		<p class="description">
 			Descubra seu tipo de voz! Este aplicativo ouvirá sua voz e 
-			identificará as notas mais graves e mais agudas que você pode cantar.
+			identificará as notas mais graves e agudas que você pode cantar.
 		</p>
-		
-		<div class="features">
-			<h3>O que este aplicativo faz:</h3>
-			<ul>
-				<li data-bullet="🎤"> Escuta a entrada do seu microfone</li>
-				<li data-bullet="🎵"> Detecta as notas que você está cantando</li>
-				<li data-bullet="📊"> Determina sua tessitura vocal</li>
-				<li data-bullet="😮"> Compara sua tessitura com os tipos vocais padrão</li>
-			</ul>
-		</div>
+	</Header>
+	
+	<div class="features">
+		<h3>O que este aplicativo faz:</h3>
+		<ul>
+			<li data-bullet="🎤"> Escuta a entrada do seu microfone*</li>
+			<li data-bullet="🎵"> Detecta as notas que você está cantando</li>
+			<li data-bullet="📊"> Determina sua tessitura vocal**</li>
+			<li data-bullet="😮"> Compara seu resultado com os tipos vocais padrão</li>
+		</ul>
 	</div>
+
+	<InfoBox>
+		<p>*Para melhores resultados, faça o teste em um ambiente silencioso.</p>
+		<p>**Este teste não substitui uma avaliação realizada por profissional.</p>
+	</InfoBox>
 
 	<button class="btn-primary" onclick={onstart}>
 		Iniciar
 	</button>
 
-	<p class="footer">
-		© 2026 Josias Matschulat. 
-		Obtenha o <a href="https://github.com/josiasmat/tessitura-vocal" target="_blank">código fonte</a>.
-	</p>
+	<div class="footer">
+		<p>
+			© 2026 Josias Matschulat. Obtenha o 
+			<a href="https://github.com/josiasmat/tessitura-vocal" target="_blank">código fonte</a>.
+		</p>
+	</div>
+
 </div>
 
 <style>
 	.description {
-		margin-bottom: 30px;
-	}
-
-	p {
-		color: #555;
-		font-size: 16px;
-		line-height: 1.6;
-		margin: 0 0 20px 0;
-	}
-
-	p.footer {
-		text-align: center;
-		font-size: 12px;
-		color: #777;
-		margin: 30px 0 0 0;
+		line-height: 1.4;
+		text-wrap: balance;
 	}
 
 	.features {
 		background: #f9f9f9;
 		border-left: 4px solid #667eea;
-		padding: 15px;
+		padding: 15px 15px 7px 15px;
 		border-radius: 8px;
 		margin: 20px 0;
 	}
@@ -71,7 +68,6 @@
 
 	.features ul {
 		margin: 0;
-		padding-left: 40px;
 	}
 
 	.features li {
@@ -82,6 +78,17 @@
 
 	.features li::marker {
 		content: attr(data-bullet) " ";
+	}
+
+	.btn-primary {
+		margin-top: 20px;
+	}
+
+	.footer p {
+		text-align: center;
+		font-size: 12px;
+		color: #777;
+		margin: 30px 0 0 0;
 	}
 
 	@media (max-width: 480px) {
