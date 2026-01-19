@@ -1,10 +1,11 @@
 <script>
 	import { fly } from "svelte/transition";
-
-    import { startPitchDetection, stopPitchDetection } from "$lib/modules/mic.js";
-    import { freqToMidi, midiToNoteName } from "$lib/modules/notes.js";
 	import { onMount } from "svelte";
-    import PulseIndicator from "./PulseIndicator.svelte";
+
+    import PulseIndicator from "$lib/components/PulseIndicator.svelte";
+
+	import { RangeDetector } from "$lib/modules/range-detector";
+    import { midiToNoteName } from "$lib/modules/notes.js";
 	
 	let { gender, onfinish } = $props();
 
@@ -25,36 +26,21 @@
     );
 
 	function startListening() {
-		let clearCurrentId = null;
-        startPitchDetection((result) => {
-            let midiPitch = freqToMidi(result.pitch);
-            if ( result.clarity >= 0.95 && midiPitch >= 36 && midiPitch < 89) {
-				if ( clearCurrentId ) {
-					clearTimeout(clearCurrentId);
-					clearCurrentId = null;
-				}
-				// Limit pitch range based on selected gender
-				if ( gender === "male" && midiPitch > 74 ) 
-					midiPitch = 74;
-				if ( gender === "female" && midiPitch < 48 )
-					midiPitch = 48;
-                currentPitch = midiPitch;
-                if ( !lowestPitch || midiPitch < lowestPitch )
-                    lowestPitch = midiPitch;
-                if ( !highestPitch || midiPitch > highestPitch )
-                    highestPitch = midiPitch;
-            } else {
-				if ( !clearCurrentId )
-					clearCurrentId = setTimeout(() => {
-						currentPitch = null;
-					}, 500);
-			}
-        });
+		RangeDetector.currentPitchCallback = (pitch) => currentPitch = pitch;
+		RangeDetector.lowPitchCallback = (pitch) => lowestPitch = pitch;
+		RangeDetector.highPitchCallback = (pitch) => highestPitch = pitch;
+		if ( gender === "male" )
+			RangeDetector.max_pitch = 74; // D4
+		else if ( gender === "female" )
+			RangeDetector.min_pitch = 48; // C2
+		RangeDetector.resetPitches();
+		RangeDetector.start();
 		isListening = true;
 	}
 
 	function stopListening() {
-        stopPitchDetection();
+		RangeDetector.stop();
+		RangeDetector.resetMinMax();
 		isListening = false;
 		const range = [lowestPitch, highestPitch];
 		onfinish(range);

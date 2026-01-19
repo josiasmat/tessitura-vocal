@@ -1,9 +1,9 @@
 <script>
-	import WelcomeScreen from '$lib/components/WelcomeScreen.svelte';
-	import GenderScreen from '$lib/components/GenderScreen.svelte';
-	import PermissionScreen from '$lib/components/PermissionScreen.svelte';
-	import ListeningScreen from '$lib/components/ListeningScreen.svelte';
-	import ResultsScreen from '$lib/components/ResultsScreen.svelte';
+	import WelcomeScreen from '$lib/screens/WelcomeScreen.svelte';
+	import GenderScreen from '$lib/screens/GenderScreen.svelte';
+	import PermissionScreen from '$lib/screens/PermissionScreen.svelte';
+	import ListeningScreen from '$lib/screens/ListeningScreen.svelte';
+	import ResultsScreen from '$lib/screens/ResultsScreen.svelte';
 
 	let currentScreen = 'welcome'; // 'welcome' | 'gender' |'permission' | 'listening' | 'results'
 	let voiceGender = null; // 'male' | 'female' | null

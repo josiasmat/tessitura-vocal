@@ -33,7 +33,7 @@ export async function startMicrophoneStream() {
 
 
 /**
- * @param {function({pitch: number, clarity: number}): void} callback 
+ * @param {function({freq: number, clarity: number}): void} callback 
  * @returns {void}
  */
 export function startPitchDetection(callback) 
@@ -76,11 +76,11 @@ export function stopPitchDetection()
  * @param {PitchDetector} detector 
  * @param {Float32Array<ArrayBuffer>} input 
  * @param {number} sampleRate 
- * @returns {{pitch: number, clarity: number}}
+ * @returns {{freq: number, clarity: number}}
  */
 function updatePitch(analyserNode, detector, input, sampleRate) 
 {
     analyserNode.getFloatTimeDomainData(input);
-    const [pitch, clarity] = detector.findPitch(input, sampleRate);
-    return { pitch, clarity };
+    const [freq, clarity] = detector.findPitch(input, sampleRate);
+    return { freq, clarity };
 }

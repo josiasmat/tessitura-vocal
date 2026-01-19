@@ -1,5 +1,5 @@
 <script>
-	import { createScoreView, updateScoreView } from "$lib/modules/scoreView.js";
+	import { createScoreView, updateScoreView } from "$lib/modules/score-view.js";
 	import { onMount } from "svelte";
 	
 	let { low, high } = $props();

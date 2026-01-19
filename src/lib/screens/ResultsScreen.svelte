@@ -1,8 +1,10 @@
 <script>
     import { fly } from "svelte/transition";
 
-	import ScoreView from "./ScoreView.svelte";
+	import ScoreView from "$lib/components/ScoreView.svelte";
+
     import { midiToNoteName } from "$lib/modules/notes.js";
+
 	let { range, gender, onreset } = $props();
 
 	const vocalTypes = {
@@ -93,7 +95,7 @@
 		</tr></tbody></table>
 
 		<div class="vocal-type">
-			<h3>Classificação do tipo vocal</h3>
+			<h3>Provável tipo vocal:</h3>
 			<div class="type-card" style="border-top-color: {selectedType.color}">
 				<div class="type-name">{vocalType}</div>
 				<p class="type-description">{selectedType.description}</p>
@@ -105,10 +107,11 @@
 		</div>
 
 		<div class="info-box">
-			<h4>Sobre sua tessitura vocal</h4>
+			<h4>Aviso</h4>
 			<p>
 				Sua tessitura vocal detectada foi associada à classificação vocal padrão mais próxima.
-				Lembre-se de que as extensões vocais podem variar e melhorar com prática e treino.
+				Para uma avaliação mais precisa, consulte um professor de canto ou regente coral.
+				Lembre-se também de que a extensão vocal pode variar e melhorar com prática e treino.
 			</p>
 		</div>
 	</div>

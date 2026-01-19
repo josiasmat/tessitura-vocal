@@ -1,9 +1,10 @@
 <script>
 	import { fly } from 'svelte/transition';
-
 	import { onMount } from 'svelte';
+	
+    import PulseIndicator from '$lib/components/PulseIndicator.svelte';
+
     import { queryMicAccess, startMicrophoneStream } from '$lib/modules/mic';
-    import PulseIndicator from './PulseIndicator.svelte';
 
 	let { oncontinue } = $props();
 

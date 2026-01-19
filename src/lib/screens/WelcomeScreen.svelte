@@ -1,5 +1,6 @@
 <script>
 	import { fly } from 'svelte/transition';
+	
 	let { onstart } = $props();
 </script>
 
