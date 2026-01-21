@@ -21,8 +21,8 @@ export const RangeDetector = {
     start() 
     {
         clearPitchTimeout.clear();
-        // check stability with 15 samples and 0.5 semitone window
-        let stablePitchChecker = new StablePitch(15, 0.5);
+        // check stability with 10 samples and 0.5 semitone window
+        let stablePitchChecker = new StablePitch(10, 0.5);
 
         startPitchDetection((result) => {
             const pitch = freqToMidi(result.freq);
@@ -44,7 +44,7 @@ export const RangeDetector = {
 				clearPitchTimeout.set();
             }
 			
-        }, { window: 1000/midiToFreq(MIN_PITCH) });
+        }, { window: 1000/(midiToFreq(MIN_PITCH)/12) });
     },
 
     stop() 
