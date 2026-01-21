@@ -1,9 +1,9 @@
 import { get } from "svelte/store";
 import { startPitchDetection, stopPitchDetection } from "./mic.js";
-import { freqToMidi } from "./notes";
+import { freqToMidi, midiToFreq } from "./notes";
 
 const CLARITY_TRESHOLD = 0.90;
-const MIN_PITCH = 36; // C2
+const MIN_PITCH = 35; // B1
 const MAX_PITCH = 88; // E6
 
 
@@ -21,12 +21,12 @@ export const RangeDetector = {
     start() 
     {
         clearPitchTimeout.clear();
-        // check stability with 10 samples and 0.5 semitone window
-        let stablePitchChecker = new StablePitch(10, 0.5);
+        // check stability with 15 samples and 0.5 semitone window
+        let stablePitchChecker = new StablePitch(15, 0.5);
 
         startPitchDetection((result) => {
             const pitch = freqToMidi(result.freq);
-            stablePitchChecker.setFreq(result.freq);
+            stablePitchChecker.pushFreq(result.freq);
             if ( result.clarity >= CLARITY_TRESHOLD 
                     && pitch >= MIN_PITCH && pitch <= MAX_PITCH) {
                 
@@ -44,7 +44,7 @@ export const RangeDetector = {
 				clearPitchTimeout.set();
             }
 			
-        }, { window: 1000/60 }); // 60 FPS
+        }, { window: 1000/midiToFreq(MIN_PITCH) });
     },
 
     stop() 
@@ -206,7 +206,7 @@ class StablePitch {
         this.#half_semitone = semitones / 2;
     }
 
-    setFreq(freq) {
+    pushFreq(freq) {
         for ( let i = this.#freqs.length-1; i > 0; i-- )
             this.#freqs[i] = this.#freqs[i-1];
         this.#freqs[0] = freq;
