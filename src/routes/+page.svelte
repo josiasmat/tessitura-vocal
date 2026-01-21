@@ -58,7 +58,8 @@
 		/>
 	{:else if currentScreen === 'results'}
 		<ResultsScreen
-			range={detectedRange}
+			low={detectedRange[0]}
+			high={detectedRange[1]}
 			gender={voiceGender}
 			onreset={goBackToWelcome}
 		/>

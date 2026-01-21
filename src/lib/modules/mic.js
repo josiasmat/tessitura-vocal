@@ -6,6 +6,10 @@ var interval_id = null;
 var audioContext = null;
 /** @type {MediaStream|null} */
 var micStream = null;
+/** @type {MediaStreamAudioSourceNode|null} */
+var sourceNode = null;
+/** @type {AnalyserNode|null} */
+var analyserNode = null;
 
 /**
  * @returns {Promise<string>} 'granted', 'denied', or 'prompt'
@@ -32,23 +36,35 @@ export async function startMicrophoneStream() {
 }
 
 
+export function stopMicrophoneStream() {
+    if ( micStream ) {
+        micStream.getAudioTracks().forEach(track => track.stop());
+        micStream = null;
+    }
+}
+
+
 /**
  * @param {function({freq: number, clarity: number}): void} callback 
+ * @param {{window?: number}} options // Optional settings
+ *      - window: time window in milliseconds for pitch detection (default: 100)
  * @returns {void}
  */
-export function startPitchDetection(callback) 
+export function startPitchDetection(callback, options = {}) 
 {
-    const MILLISECONDS = 100;
+    let windowMs = options.window || 100;
     
-    const analyserNode = audioContext.createAnalyser();
+    analyserNode = audioContext.createAnalyser();
 
-    const maxSamples = Math.floor(audioContext.sampleRate * MILLISECONDS / 1000);
+    const maxSamples = Math.floor(audioContext.sampleRate * windowMs / 1000);
     let fftSize = 32;
     while ( (fftSize * 2 <= maxSamples) && (fftSize * 2 <= 32768) )
         fftSize *= 2;
     analyserNode.fftSize = fftSize;
 
-    audioContext.createMediaStreamSource(micStream).connect(analyserNode);
+    windowMs = 1000 * windowMs / audioContext.sampleRate;
+
+    sourceNode = audioContext.createMediaStreamSource(micStream).connect(analyserNode);
     const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
     detector.minVolumeDecibels = -20;
     const input = new Float32Array(detector.inputLength);
@@ -58,7 +74,7 @@ export function startPitchDetection(callback)
     
     interval_id = setInterval(() => {
         callback(updatePitch(analyserNode, detector, input, audioContext.sampleRate));
-    }, MILLISECONDS);
+    }, windowMs);
 }
 
 
@@ -68,6 +84,10 @@ export function stopPitchDetection()
     if ( interval_id )
         clearInterval(interval_id);
     interval_id = null;
+    sourceNode.disconnect();
+    sourceNode = null;
+    analyserNode.disconnect();
+    analyserNode = null;
 }
 
 

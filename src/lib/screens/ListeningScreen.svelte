@@ -13,7 +13,7 @@
 	let isListening = $state(false);
 
     let currentPitch = $state(null);
-    let lowestPitch = $state(null);
+    let lowestPitch  = $state(null);
     let highestPitch = $state(null);
 
 	let pitchOutsideRange = $derived(
@@ -22,7 +22,7 @@
 	);
 
 	let currentNote = $derived(currentPitch ? midiToNoteName(currentPitch) : '--');
-	let lowestNote = $derived(lowestPitch ? midiToNoteName(lowestPitch) : null);
+	let lowestNote  = $derived(lowestPitch  ? midiToNoteName(lowestPitch)  : null);
 	let highestNote = $derived(highestPitch ? midiToNoteName(highestPitch) : null);
 
     let canStopListening = $derived(
@@ -32,21 +32,20 @@
     );
 
 	function startListening() {
-		RangeDetector.currentPitchCallback = (pitch) => currentPitch = pitch;
-		RangeDetector.lowPitchCallback = (pitch) => lowestPitch = pitch;
+		RangeDetector.resetAll();
+		RangeDetector.lastPitchCallback = (pitch) => currentPitch = pitch;
+		RangeDetector.lowPitchCallback  = (pitch) => lowestPitch  = pitch;
 		RangeDetector.highPitchCallback = (pitch) => highestPitch = pitch;
 		if ( gender === "male" )
 			RangeDetector.max_pitch = 74; // D4
 		else if ( gender === "female" )
 			RangeDetector.min_pitch = 48; // C2
-		RangeDetector.resetPitches();
 		RangeDetector.start();
 		isListening = true;
 	}
 
 	function stopListening() {
 		RangeDetector.stop();
-		RangeDetector.resetMinMax();
 		isListening = false;
 		const range = [lowestPitch, highestPitch];
 		onfinish(range);

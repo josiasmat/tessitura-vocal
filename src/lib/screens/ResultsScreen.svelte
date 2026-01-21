@@ -1,82 +1,73 @@
 <script>
+	import { onMount } from "svelte";
     import { fly } from "svelte/transition";
 
 	import Header from "$lib/components/Header.svelte";
 	import ScoreView from "$lib/components/ScoreView.svelte";
 	import InfoBox from "$lib/components/InfoBox.svelte";
 
-    import { midiToNoteName } from "$lib/modules/notes.js";
+    import { 
+		RangeDetector, evaluateRange, getStandardRange 
+	} from "$lib/modules/range-detector";
+	import { midiToNoteName } from "$lib/modules/notes.js";
+    import { stopMicrophoneStream } from "$lib/modules/mic";
 
-	let { range, gender, onreset } = $props();
+	let { low, high, gender, onreset } = $props();
 
 	const vocalTypes = {
-		'Soprano': {
+		'soprano': {
+			name: 'Soprano',
 			description: 'Voz feminina mais aguda',
-			range: [60, 81],
-			gender: 'female',
 			color: '#FF6B9D'
 		},
-		'Mezzo-Soprano': {
+		'mezzo': {
+			name: 'Mezzo-Soprano',
 			description: 'Voz feminina média',
-			range: [57, 77],
-			gender: 'female',
 			color: '#C06C84'
 		},
-		'Contralto': {
+		'alto': {
+			name: 'Contralto',
 			description: 'Voz feminina mais grave',
-			range: [53, 74],
-			gender: 'female',
 			color: '#6C567B'
 		},
-		'Tenor': {
+		'tenor': {
+			name: 'Tenor',
 			description: 'Voz masculina mais aguda',
-			range: [47, 67],
-			gender: 'male',
 			color: '#4A90E2'
 		},
-		'Barítono': {
+		'baritone': {
+			name: 'Barítono',
 			description: 'Voz masculina média',
-			range: [43, 64],
-			gender: 'male',
 			color: '#2E5C8A'
 		},
-		'Baixo': {
+		'bass': {
+			name: 'Baixo',
 			description: 'Voz masculina mais grave',
-			range: [40, 60],
-			gender: 'male',
 			color: '#1A3B5C'
+		},
+		'unknown': {
+			name: 'Não identificado',
+			description: 'Não foi possível determinar o tipo vocal',
+			color: '#f00'
 		}
 	};
 
-    function getVoiceType(range) {
-        let detectedLow = range[0];
-        let detectedHigh = range[1];
-        let bestMatch = null;
-        let smallestDiff = Infinity;
-
-        for ( const [type, info] of Object.entries(vocalTypes) ) {
-            if (info.gender !== gender) continue;
-            let [typeLow, typeHigh] = info.range;
-            let lowDiff = Math.abs(detectedLow - typeLow);
-            let highDiff = Math.abs(detectedHigh - typeHigh);
-            let totalDiff = lowDiff + highDiff;
-
-            if ( totalDiff < smallestDiff ) {
-                smallestDiff = totalDiff;
-                bestMatch = type;
-            }
-        }
-
-        return bestMatch;
-    }
-
-    function rangeToNotes(range) {
+    function getRangeStr(type) {
+		const range = getStandardRange(type);
         return `${midiToNoteName(range[0])} - ${midiToNoteName(range[1])}`;
     }
 
-    let vocalType = $derived(getVoiceType(range));
-    let selectedType = $derived(vocalTypes[vocalType]);
+    let voiceType = $derived(evaluateRange(low, high, gender));
+
+	let typeName = $derived(vocalTypes[voiceType].name);
+	let typeDescription = $derived(vocalTypes[voiceType].description);
+	let typeColor = $derived(vocalTypes[voiceType].color);
+	let typeRange = $derived(voiceType !== 'unknown' ? getRangeStr(voiceType) : '--');
+
+	onMount(() => stopMicrophoneStream());
+
 </script>
+
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 300 }}>
 	<Header>
@@ -86,24 +77,26 @@
 	<div class="results">
 		<table class="detected-range"><tbody><tr>
 			<td class="score-container">
-				<ScoreView low={range[0]} high={range[1]} />
+				<ScoreView {low} {high} />
 			</td>
 			<td><div class="range-box">
-				<span class="note highest">{range[0] ? midiToNoteName(range[1]) : '--'}</span>
+				<span class="note highest">{midiToNoteName(high)}</span>
 				<span class="range-span">▲</span>
-				<span class="note lowest">{range[0] ? midiToNoteName(range[0]) : '--'}</span>
+				<span class="note lowest">{midiToNoteName(low)}</span>
 			</div></td>
 		</tr></tbody></table>
 
 		<div class="vocal-type">
 			<h3>Provável tipo vocal:</h3>
-			<div class="type-card" style="border-top-color: {selectedType.color}">
-				<div class="type-name">{vocalType}</div>
-				<p class="type-description">{selectedType.description}</p>
+			<div class="type-card" style="border-top-color: {typeColor}">
+				<div class="type-name">{typeName}</div>
+				<p class="type-description">{typeDescription}</p>
+				{#if voiceType !== 'unknown'}
 				<div class="type-range">
 					<span class="label">Tessitura padrão:</span>
-					<span class="range">{rangeToNotes(selectedType.range)}</span>
+					<span class="range">{typeRange}</span>
 				</div>
+				{/if}
 			</div>
 		</div>
 
