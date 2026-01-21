@@ -1,7 +1,14 @@
+const A4_FREQ = 440;
+const A4_MIDI = 69;
 
 
 export function freqToMidi(freq) {
-    return Math.round(69 + 12 * Math.log2(freq / 440));
+    return Math.round(A4_MIDI + 12 * Math.log2(freq / A4_FREQ));
+}
+
+
+export function midiToFreq(n) {
+    return A4_FREQ * Math.pow(2, (n - A4_MIDI) / 12);
 }
 
 
