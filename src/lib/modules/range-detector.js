@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 import { startPitchDetection, stopPitchDetection } from "./mic.js";
 import { freqToMidi, midiToFreq } from "./notes";
 
-const CLARITY_TRESHOLD = 0.90;
+const CLARITY_THRESHOLD = 0.95;
 const MIN_PITCH = 35; // B1
 const MAX_PITCH = 88; // E6
 
@@ -21,16 +21,15 @@ export const RangeDetector = {
     start() 
     {
         clearPitchTimeout.clear();
-        // check stability with 10 samples and 0.5 semitone window
+        // check stability with 10 samples and a quarter-tone window
         let stablePitchChecker = new StablePitch(10, 0.5);
 
-        startPitchDetection((result) => {
+        startPitchDetection(result => {
             const pitch = freqToMidi(result.freq);
             stablePitchChecker.pushFreq(result.freq);
-            if ( result.clarity >= CLARITY_TRESHOLD 
+            if ( result.clarity >= CLARITY_THRESHOLD 
                     && pitch >= MIN_PITCH && pitch <= MAX_PITCH) {
                 
-                // Stable pitch detected
                 const stablePitch = stablePitchChecker.getPitch();
                 if ( stablePitch ) {
                     clearPitchTimeout.clear();
@@ -44,7 +43,8 @@ export const RangeDetector = {
 				clearPitchTimeout.set();
             }
 			
-        }, { window: 1000/(midiToFreq(MIN_PITCH)/12) });
+        // Minimum FFT window to detect a semitone over MIN_PITCH
+        }, { window: 16817.15375 / midiToFreq(MIN_PITCH) });
     },
 
     stop() 
@@ -219,16 +219,15 @@ class StablePitch {
         // Compute average frequency
         const avg = this.#freqs.reduce((a,b) => a+b, 0) / this.#freqs.length;
         // Helper functions
-        const freqToPitchFromA4 = (f) => 12 * Math.log2(f / 440);
-        const pitchFromA4ToFreq = (p) => 440 * Math.pow(2, p / 12);
-        // Compute microtone thresholds
-        const lowerThreshold = pitchFromA4ToFreq(freqToPitchFromA4(avg) - this.#half_semitone);
-        const upperThreshold = pitchFromA4ToFreq(freqToPitchFromA4(avg) + this.#half_semitone);
-        // Check if all frequencies are within the same microtone
-        const stable = this.#freqs.every(f => f >= lowerThreshold && f <= upperThreshold);
+        const freqDiff = (f, d) => Math.pow(2, (12 * Math.log2(f) + d) / 12);
+        // Compute window limits
+        const upperLimit = freqDiff(avg, +this.#half_semitone);
+        const lowerLimit = freqDiff(avg, -this.#half_semitone);
+        // Check if all frequencies are within limits
+        const stable = this.#freqs.every(f => (f >= lowerLimit) && (f <= upperLimit));
         // Return pitch if stable, else null
         if ( stable )
-            return Math.round(freqToPitchFromA4(avg) + 69);
+            return Math.round(freqToMidi(avg));
         return null;
     }
 }

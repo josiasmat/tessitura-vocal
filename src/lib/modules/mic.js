@@ -58,15 +58,17 @@ export function startPitchDetection(callback, options = {})
 
     const maxSamples = Math.floor(audioContext.sampleRate * windowMs / 1000);
     let fftSize = 32;
-    while ( (fftSize * 2 <= maxSamples) && (fftSize * 2 <= 32768) )
+    while ( (fftSize <= maxSamples) && (fftSize*2 <= 32768) )
         fftSize *= 2;
     analyserNode.fftSize = fftSize;
+    analyserNode.smoothingTimeConstant = 0.2;
 
-    windowMs = 1000 * windowMs / audioContext.sampleRate;
+    windowMs = Math.ceil(1000 * windowMs / audioContext.sampleRate);
 
     sourceNode = audioContext.createMediaStreamSource(micStream).connect(analyserNode);
     const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
-    detector.minVolumeDecibels = -20;
+    detector.minVolumeDecibels = -24;
+    detector.clarityThreshold = 0.8;
     const input = new Float32Array(detector.inputLength);
     
     if ( interval_id )
