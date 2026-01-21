@@ -4,18 +4,17 @@
 	import Header from '$lib/components/Header.svelte';
 	import InfoBox from '$lib/components/InfoBox.svelte';
 
-	let { oncontinue } = $props();
-	let selectedGender = $state(null);
+	let { gender = $bindable(), oncontinue } = $props();
 
-	function selectGender(gender) {
-		selectedGender = gender;
+	function selectGender(value) {
+		gender = value;
 	}
 
 	function handleContinue() {
-		if (selectedGender)
-			oncontinue(selectedGender);
+		if (gender) oncontinue();
 	}
 </script>
+
 
 <div class="container" in:fly={{ y: 50, duration: 300, delay: 50 }}>
 	<Header>
@@ -32,7 +31,7 @@
 				{ icon: '🧑🏽', label: "Voz&nbsp;masculina", value: "male" },
 			] as item}
 				<button
-					class={["switch", (selectedGender === item.value) && "active"]}
+					class={["switch", (gender === item.value) && "active"]}
 					onclick={() => selectGender(item.value)}
 				>
 					<span class="icon">{item.icon}</span>
@@ -42,7 +41,7 @@
 		</div>
 	</div>
 
-	<button class="btn-primary" onclick={handleContinue} disabled={!selectedGender}>
+	<button class="btn-primary" onclick={handleContinue} disabled={!gender}>
 		Continuar
 	</button>
 
@@ -51,6 +50,7 @@
 		(faixa de frequência). Ela não se refere à identidade de gênero.</p>
 	</InfoBox>
 </div>
+
 
 <style>
 	.description {

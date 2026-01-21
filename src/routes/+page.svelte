@@ -5,10 +5,18 @@
 	import ListeningScreen from '$lib/screens/ListeningScreen.svelte';
 	import ResultsScreen from '$lib/screens/ResultsScreen.svelte';
 
-	let currentScreen = 'welcome'; // 'welcome' | 'gender' |'permission' | 'listening' | 'results'
-	let voiceGender = null; // 'male' | 'female' | null
-	let detectedRange = { lowest: null, highest: null };
-	let matchedVocalType = null;
+	/** @type {string} -
+	 *  'welcome' | 'gender' | 'permission' | 'listening' | 'results' */
+	let currentScreen = $state('welcome');
+	/** @type {string|null} -
+	 *  'male' | 'female' | null */
+	let voiceGender = $state(null); 
+	/** @type {{lowest: number|null, highest: number|null}} -
+	 *  Detected vocal range in MIDI key numbers. */
+	let detectedRange = $state({ lowest: null, highest: null });
+	/** @type {string|null} -
+	 *  'soprano' | 'mezzo' | 'alto' | 'tenor' | 'baritone' | 'bass' | 'unknown' */
+	let matchedVocalType = $state(null);
 
 	function setCurrentScreen(id) {
 		currentScreen = id;
@@ -16,18 +24,16 @@
 	}
 
 	function goToGender() {
-		voiceGender = null;
-		detectedRange = { lowest: null, highest: null };
-		matchedVocalType = null;
 		setCurrentScreen("gender");
 	}
 
-	function goToPermission(gender) {
-		voiceGender = gender;
+	function goToPermission() {
 		setCurrentScreen("permission");
 	}
 
 	function goToListening() {
+		detectedRange = { lowest: null, highest: null };
+		matchedVocalType = null;
 		setCurrentScreen("listening");
 	}
 
@@ -37,10 +43,12 @@
 	}
 
 	function goBackToWelcome() {
+		voiceGender = null;
 		setCurrentScreen("welcome");
 	}
 
 </script>
+
 
 <div id="app-background"></div>
 
@@ -48,7 +56,10 @@
 	{#if currentScreen === 'welcome'}
 		<WelcomeScreen onstart={goToGender} />
 	{:else if currentScreen === 'gender'}
-		<GenderScreen oncontinue={goToPermission} />
+		<GenderScreen 
+			bind:gender={voiceGender}
+			oncontinue={goToPermission} 
+		/>
 	{:else if currentScreen === 'permission'}
 		<PermissionScreen oncontinue={goToListening} />
 	{:else if currentScreen === 'listening'}
@@ -61,6 +72,7 @@
 			low={detectedRange[0]}
 			high={detectedRange[1]}
 			gender={voiceGender}
+			ontryagain={goToGender}
 			onreset={goBackToWelcome}
 		/>
 	{/if}

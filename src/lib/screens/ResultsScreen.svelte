@@ -12,7 +12,7 @@
 	import { midiToNoteName } from "$lib/modules/notes.js";
     import { stopMicrophoneStream } from "$lib/modules/mic";
 
-	let { low, high, gender, onreset } = $props();
+	let { low, high, gender, onreset, ontryagain } = $props();
 
 	const vocalTypes = {
 		'soprano': {
@@ -100,16 +100,24 @@
 			</div>
 		</div>
 
+		{#if voiceType !== 'unknown'}
 		<InfoBox>
 			<p>Sua tessitura vocal detectada foi associada à classificação vocal padrão mais próxima.
 			Para uma avaliação mais precisa, consulte um professor de canto ou regente coral.
 			Lembre-se também de que a extensão vocal pode variar e melhorar com prática e treino.</p>
 		</InfoBox>
+		{/if}
 	</div>
 
+	{#if voiceType === 'unknown'}
+	<button class="btn-primary" onclick={ontryagain}>
+		↻ Tentar novamente
+	</button>
+	{:else}
 	<button class="btn-primary" onclick={onreset}>
 		↻ Voltar ao início
 	</button>
+	{/if}
 </div>
 
 <style>
@@ -196,7 +204,7 @@
 	}
 
 	.type-description {
-		margin: 0 0 15px 0;
+		margin: 0;
 		color: #555;
 		font-size: 14px;
 	}
@@ -208,6 +216,7 @@
 		padding-top: 12px;
 		border-top: 1px solid #e0e0e0;
 		font-size: 14px;
+		margin: 15px 0 0;
 	}
 
 	.type-range .label {
