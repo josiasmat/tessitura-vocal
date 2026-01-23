@@ -31,7 +31,7 @@
 				{ icon: '🧑🏽', label: "Voz&nbsp;masculina", value: "male" },
 			] as item}
 				<button
-					class={["switch", (gender === item.value) && "active"]}
+					class={["switch", (gender === item.value) && "selected"]}
 					onclick={() => selectGender(item.value)}
 				>
 					<span class="icon">{item.icon}</span>
@@ -87,21 +87,28 @@
 		font-weight: 500;
 		display: inline-block;
 		color: #666;
-		transition: all 0.3s ease-out;
 	}
 
 	.switch:hover {
 		border-color: #999;
 		background: #f9f9f9;
-		transition: none;
 	}
 
-	.switch.active {
+	.switch:not(:hover) {
+		transition: all 0.2s ease-out;
+	}
+
+	.switch:active:hover:not(.selected) {
+		border-color: #888;
+		background: #eee;
+	}
+
+	.switch.selected {
 		border-color: #2e5c8a;
 		background: #c0d1ff;
 		color: #0f3152;
 		cursor: default;
-		animation: normal 0.5s pulse-button;
+		animation: normal 0.5s pulse-switch;
 	}
 
 	.switch .icon {
@@ -114,7 +121,7 @@
 		margin-bottom: 20px;
 	}
 
-	@keyframes pulse-button {
+	@keyframes pulse-switch {
 		0% {
 			box-shadow: 0 0 0 0 rgba(46, 92, 138, 0.7);
 		}
