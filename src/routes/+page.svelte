@@ -19,8 +19,11 @@
 	let matchedVocalType = $state(null);
 
 	function setCurrentScreen(id) {
-		currentScreen = id;
-		scrollTo(0, 0);
+		console.log(`setCurrentScreen("${id}") called.`)
+		setTimeout(() => {
+			currentScreen = id;
+			scrollTo(0, 0);
+		}, 50);
 	}
 
 	function goToGender() {
