@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 import { startPitchDetection, stopPitchDetection } from "./mic.js";
 import { freqToMidi, midiToFreq } from "./notes";
 
-const CLARITY_THRESHOLD = 0.95;
+const CLARITY_THRESHOLD = 0.90;
 const MIN_PITCH = 35; // B1
 const MAX_PITCH = 88; // E6
 
@@ -22,7 +22,7 @@ export const RangeDetector = {
     {
         clearPitchTimeout.clear();
         // check stability with 10 samples and a quarter-tone window
-        let stablePitchChecker = new StablePitch(10, 0.5);
+        let stablePitchChecker = new StablePitch(15, 0.5);
 
         startPitchDetection(result => {
             const pitch = freqToMidi(result.freq);
